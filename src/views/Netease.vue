@@ -1,17 +1,18 @@
+<!-- netease主承载页 -->
 <template>
-    <div id="app">
-        <router-view />
+    <div id="netease-main">
+        NetEase
     </div>
 </template>
 
 <script>
-
 export default {
-    name: "App",
+    name: "netease",
     data () {
         return {
         };
     },
+
 }
 
 </script>
