@@ -29,8 +29,12 @@ export default {
     a {
         width: 50vw;
         float: left;
+        background-color: #07d714;
         img {
             width: 15vw;
+        }
+        + a {
+            background-color: #e92201;
         }
     }
 }
