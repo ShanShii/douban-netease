@@ -12,15 +12,23 @@ export default new Router({
       name: 'entrance',
       component: () => import('./views/Entrance.vue')
     },
+
     {
       path: '/douban',
       name: 'douban',
       component: () => import('./views/Douban.vue')
     },
+
     {
       path: '/netease',
       name: 'netease',
       component: () => import('./views/Netease.vue')
+    },
+
+    {
+      path: '/citylist',
+      name: 'citylist',
+      component: () => import('./views/Citylist.vue')
     }
   ]
 })

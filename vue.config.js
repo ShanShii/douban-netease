@@ -6,6 +6,9 @@ module.exports = {
           // secure: true,  // 检测https 且 证书有效 的时候 使用该参数
           changeOrigin: true,  // 是否跨域
           // pathRewrite会失效，不知道为什么
+          pathRewrite: {
+            '^/dbapi' : ''
+          }
         }
       }
     }

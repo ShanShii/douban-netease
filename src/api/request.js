@@ -24,7 +24,6 @@ services = {
 }
 // 请求拦截
 for (let service in services) {
-    console.log(service)
     services[service].interceptors.request.use(
         config => {
             removePending(config); //在一个ajax发送前执行一下取消操作
@@ -43,11 +42,10 @@ for (let service in services) {
     services[service].interceptors.response.use(
         response => {
             removePending(response.config);
-            console.log(response);
             return response.data
         },
         error => {
-            console.log('err' + error)
+            console.log('响应拦截Error' + error)
             return Promise.reject(error)
         }
     )

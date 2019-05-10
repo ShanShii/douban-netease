@@ -6,7 +6,7 @@ const port = 8010;
 
 //本地代理， CORS 跨域
 const dbApiServer = http.createServer((req, res) => {
-    const url = 'https://api.douban.com/v2/movie' + req.url;
+    const url = 'https://api.douban.com/v2' + req.url;
     const options = {
         url: url
     };
