@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!-- 解决访问豆瓣api403问题 , 请求时不携带referer信息，竟然可以避免403问题..-->
+    <meta name="referrer" content="no-referrer">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>douban-netease</title>
   </head>
