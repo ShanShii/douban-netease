@@ -10,25 +10,38 @@ export default new Router({
     {
       path: '/',
       name: 'entrance',
-      component: () => import('./views/Entrance.vue')
+      component: () => import('@/views/Entrance.vue')
     },
 
     {
       path: '/douban',
       name: 'douban',
-      component: () => import('./views/Douban.vue')
+      component: () => import('@/views/Douban.vue'),
+      redirect: '/douban/main',
+      children: [
+        {
+          path: 'main',
+          name: 'main',
+          component: () => import('@/views/db-main.vue')
+        },
+        {
+          path: 'recommend',
+          name: 'recommend',
+          component: () => import('@/views/db-recommed.vue'),
+        },
+        {
+          path: 'mine',
+          name: 'mine',
+          component: () => import('@/views/db-mine.vue'),
+        }
+      ]
     },
 
     {
       path: '/netease',
       name: 'netease',
-      component: () => import('./views/Netease.vue')
+      component: () => import('@/views/Netease.vue')
     },
 
-    {
-      path: '/citylist',
-      name: 'citylist',
-      component: () => import('./views/Citylist.vue')
-    }
   ]
 })

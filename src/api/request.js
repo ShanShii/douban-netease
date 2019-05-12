@@ -26,7 +26,7 @@ services = {
 for (let service in services) {
     services[service].interceptors.request.use(
         config => {
-            removePending(config); //在一个ajax发送前执行一下取消操作
+            // removePending(config); //在一个ajax发送前执行一下取消操作
             config.cancelToken = new cancelToken((c)=>{
                 pending.push({ u: config.url + '&' + config.method, f: c });
             });
@@ -45,7 +45,6 @@ for (let service in services) {
             return response.data
         },
         error => {
-            console.log('响应拦截Error' + error)
             return Promise.reject(error)
         }
     )

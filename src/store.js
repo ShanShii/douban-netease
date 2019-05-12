@@ -4,13 +4,15 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
+    state: {
+        location: ''
+    },
+    mutations: {
+        setLocation(state, location) {
+            state.location = location;
+        }
+    },
+    actions: {
 
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  }
+    }
 })

@@ -12,9 +12,28 @@ export function getCityList() {
     return areaList;
 }
 
+// top250电影列表
 export function getMovieList(params) {
     return request({
         url: movie + '/top250',
+        method: 'get',
+        params,
+    })
+}
+
+// 正在热映
+export function getInTheaters(params) {
+    return request({
+        url: movie + '/in_theaters',
+        method: 'get',
+        params,
+    })
+}
+
+// 即将上映
+export function getComingSoon(params) {
+    return request({
+        url: movie + '/coming_soon',
         method: 'get',
         params,
     })

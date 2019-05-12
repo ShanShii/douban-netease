@@ -16,7 +16,8 @@
             />
         </van-list>
     </div>
-    <van-area v-else
+    <!-- 默认选定要加value="xxx"，否则下级市/县无法选定=>传递 -->
+    <van-area v-else value="110000"
         :area-list="cityList" :columns-num="2" :visible-item-count="10" title="选择城市"
         @confirm="onConfirm"
         @cancel="onCancel"/>
@@ -45,6 +46,7 @@ export default {
         // 重设地址emit到父组件
         completed() {
             this.$emit("completed", {location: this.location, show: false})
+            this.location = ''
         },
         // 搜索选定城市
         selectCity(item) {
@@ -66,7 +68,6 @@ export default {
     },
     created() {
         this.cityList = getCityList();
-        this.location = '';
     }
 };
 </script>

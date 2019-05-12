@@ -1,13 +1,13 @@
 <!-- navbar -->
 <template>
     <div id="nav">
-        <van-nav-bar fixed :left-text="location"
-            @click-left="onClickLeft"
-            @click-right="onClickRight">
-
-            <van-search class="search-bar" slot="right"
-                placeholder="请输入搜索关键词" v-model="searchValue"/>
-        </van-nav-bar>
+        <nav class="top-nav">
+            <div class="location"  @click="onClickLeft">
+                {{ location }} <van-icon size="12px" name="arrow-down" />
+            </div>
+            <van-search class="search" placeholder="请输入搜索关键词"
+                 @click="onClickRight" v-model="searchValue"/>
+        </nav>
 
         <van-popup v-model="popShow" position="right">
             <Citylist @completed="getSelected"></Citylist>
@@ -18,6 +18,9 @@
 <script>
 import BMapLoader from '../api/location.js'
 import Citylist from '@/views/Citylist'
+import {
+    mapMutations
+} from 'vuex'
 
 export default {
     components: {
@@ -32,6 +35,9 @@ export default {
         };
     },
     methods: {
+        ...mapMutations([
+            'setLocation'
+        ]),
         // 获得定位地址
         getLocation() {
             ///手机可以，电脑不可以，(浏览器定位)我傻了...
@@ -81,6 +87,12 @@ export default {
             }
         }
     },
+    watch: {
+        location: function() {
+            // console.log(this.location);
+            this.setLocation(this.location);
+        }
+    },
     mounted() {
         this.getLocation();
     }
@@ -89,17 +101,30 @@ export default {
 </script>
 <style lang='scss'>
     #nav {
-        height: 45px;
-        i, span {
-            color: #07c160;
-        }
-        .search-bar {
-            i.van-icon.van-icon-search {
-                color: #07c160;
-                // 这里不能scoped，因为这是searchbar的内容，scoped加不上去了
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+        line-height: 50px;
+        color: #07c160;
+        border-bottom: 1px solid #ebedf0;
+        background-color: #fff;
+        .top-nav {
+            display: flex;
+            height: 50px;
+            font-size: 14px;
+            .location {
+                margin: 0 3vw;
             }
-            width: 285px;
-            padding: 6px 0;
+            .search {
+                flex: auto;
+                padding-left: 0;
+                i.van-icon.van-icon-search {
+                    color: #07c160;
+                    // 这里不能scoped，因为这是searchbar的内容，scoped加不上去了
+                }
+            }
         }
     }
 </style>

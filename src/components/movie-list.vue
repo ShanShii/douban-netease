@@ -7,13 +7,18 @@
                 <div class="caption">
                     <p class="title">{{ item.title }}</p>
                     <div class="rate">
-                        <van-rate v-model="stars[index]" :size="12" allow-half readonly/>
-                        <span>{{ item.rating.average.toFixed(1) }}</span>
+                        <template v-if="stars[index] > 0">
+                            <van-rate v-model="stars[index]" :size="12" allow-half readonly/>
+                            <span>{{ item.rating.average.toFixed(1) }}</span>
+                        </template>
+                        <template v-else>
+                            <span font-size="14px" color="grey">暂无评分</span>
+                        </template>
                     </div>
                     <div class="info van-ellipsis">
                         导演: 
                         <span
-                            v-for="(director, index) of item.directors" :key="director">
+                            v-for="(director, index) of item.directors" :key="index">
                             <template v-if="index === 0">
                                 {{ director.name }}
                             </template>
@@ -25,7 +30,7 @@
                     <div class="info van-ellipsis">
                         主演: 
                         <span
-                            v-for="(cast, index) of item.casts" :key="cast">
+                            v-for="(cast, index) of item.casts" :key="index">
                             <template v-if="index === 0">
                                 {{ cast.name }}
                             </template>
@@ -44,7 +49,14 @@
 <script>
 export default {
     name: "movieList",
-    props: ['data'],
+    props: {
+        data: {
+            type: Array,
+            default: () => {
+                return []
+            }
+        }
+    },
     data () {
         return {
         };
@@ -64,7 +76,7 @@ export default {
         display: flex;
         img {
             height: 150px;
-            width: 100px;
+            width: 110px;
             flex: 0 0 80px;
         }
 
