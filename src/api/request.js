@@ -15,7 +15,10 @@ let removePending = (config) => {
 
 let services = {};
 const dbservice = axios.create({
-    timeout: 50000
+    timeout: 50000,
+    params: {
+        apikey: '0b2bdeda43b5688921839c8ecb20399b',
+    }
 }), wyservice = axios.create({
     timeout: 50000
 });

@@ -30,7 +30,7 @@ export function getInTheaters(params) {
     })
 }
 
-// 即将上映
+// 即将上映 count=100 
 export function getComingSoon(params) {
     return request({
         url: movie + '/coming_soon',
@@ -38,3 +38,5 @@ export function getComingSoon(params) {
         params,
     })
 }
+
+// http://api.douban.com/v2/movie/subject/26004132?apikey=0b2bdeda43b5688921839c8ecb20399b  电影详情

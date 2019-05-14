@@ -1,60 +1,48 @@
 <!-- movie-list电影简介单元格 -->
 <template>
     <div class="movie-list">
-        <van-cell v-for="(item, index) in data" :key="index">
-            <div class="movie-item">
-                <img :src="item.images.small" alt="Movie Image">
-                <div class="caption">
-                    <p class="title">{{ item.title }}</p>
-                    <div class="rate">
-                        <template v-if="stars[index] > 0">
-                            <van-rate v-model="stars[index]" :size="12" allow-half readonly/>
-                            <span>{{ item.rating.average.toFixed(1) }}</span>
-                        </template>
-                        <template v-else>
-                            <span font-size="14px" color="grey">暂无评分</span>
-                        </template>
-                    </div>
-                    <div class="info van-ellipsis">
-                        导演: 
-                        <span
-                            v-for="(director, index) of item.directors" :key="index">
-                            <template v-if="index === 0">
-                                {{ director.name }}
-                            </template>
-                            <template v-else>
-                                {{ " / " + director.name }}
-                            </template>
-                        </span>
-                    </div>
-                    <div class="info van-ellipsis">
-                        主演: 
-                        <span
-                            v-for="(cast, index) of item.casts" :key="index">
-                            <template v-if="index === 0">
-                                {{ cast.name }}
-                            </template>
-                            <template v-else>
-                                {{ " / " + cast.name }}
-                            </template>
-                        </span>
-                    </div>
-                    <div v-if="item.collect_count" class="has-watched">{{ item.collect_count }}人看过</div>
+        <!-- comingSoon中的按月排序，四个button（all, 5, 6, 7 | 时间，热度），有点像购物车 -->
+        <div class="sortByMonth" v-if="movieListType === 'comingSoon'">
+            {{123}}
+        </div>
+        <div class="movie-wrapper"  :class="{ 'coming-soon-wrapper': movieListType}"
+          v-for="(item, index) in movies" :key="index">
+          <!-- ↑index=pubdate,当为comingSoon时,因为此时movies是一个对象 -->
+            <!-- 电影上映日期，只有“即将上映”中有 -->
+            <template v-if="movieListType === 'comingSoon'"> 
+                <div class="movie-date">
+                    {{ index }}
                 </div>
-            </div>
-        </van-cell>
+                <div class="coming-soon">
+                    <div v-for="(movie, index) in item" :key="index">
+                        <movie-cell :item="movie"></movie-cell>
+                    </div>
+                </div>          
+            </template>
+            <movie-cell v-else :item="item"></movie-cell>
+        </div>
+        
     </div>
 </template>
 
 <script>
+import movieCell from './movie-cell'
+
 export default {
     name: "movieList",
+    components: {
+        movieCell
+    },
     props: {
         data: {
             type: Array,
             default: () => {
                 return []
             }
+        },
+        movieListType: {
+            type: String,
+            default: ''
         }
     },
     data () {
@@ -62,26 +50,57 @@ export default {
         };
     },
     computed: {
-        stars() {
-            return this.data.map(item => item.rating.stars*0.1)
+        // comingSoon电影分组，返回一个key为日期的对应对象，没有mainland_pubdate的先过滤掉
+        // 由于comingSoon的list实现比较不一样,所以讲movie-cell拆分了出来
+        movies() {
+            if(! this.movieListType) return this.data
+            else {
+                let group = {}
+                for (let item of this.data) {
+                    let date = item.mainland_pubdate
+                    if(date === '') continue
+                    if(!group[date]) group[date] = []
+                    group[date].push(item)
+                }
+                return group
+            }
         }
+    },
+    methods: {
     },
     mounted() {
     }
 }
 
 </script>
-<style lang='scss' scoped>
+<style lang='scss'>
+.movie-wrapper {
+    position: relative;
+    .coming-soon {
+        margin-top: 30px;
+    }
+
+    .movie-date {
+        position: absolute;
+        top: -30px;
+        height: 30px;
+        width: 100vw;
+        padding: 0 7px;
+        font-size: 13.5px;
+        line-height: 30px;
+        color: gray;
+        background-color: #ebedf0;
+    }
     .movie-item {
         display: flex;
         img {
             height: 150px;
             width: 110px;
-            flex: 0 0 80px;
+            flex: none;
         }
 
         .caption {
-            flex: 1;
+            flex: auto;
             width: calc(100% - 100px - 10px);
             margin-left: 10px;
             .title {
@@ -107,4 +126,5 @@ export default {
             }
         }
     }
+}
 </style>

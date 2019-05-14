@@ -51,9 +51,6 @@ export default {
                 this.top250Loading = false;
                 this.top250finished = this.checkMore(res);
             })
-        },
-        getComingSoonMovies() {
-
         }
     },
     mounted () {
