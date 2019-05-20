@@ -1,6 +1,6 @@
 <!-- doubanTabbar -->
 <template>
-    <div class="tabbar">
+    <div class="tabbar" v-if="pos !== undefined">
         <van-tabbar v-model="active" active-color="#07c160">
             <van-tabbar-item icon="home-o" to="/douban/main">热映</van-tabbar-item>
             <van-tabbar-item icon="video-o" to="/douban/recommend">推荐</van-tabbar-item>
@@ -11,12 +11,7 @@
 
 <script>
 export default {
-    props: {
-        pos: {
-            type: Number,
-            default: 0
-        }
-    },
+    props: ['pos'],
     data() {
         return {
         };

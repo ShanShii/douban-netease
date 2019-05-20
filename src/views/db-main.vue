@@ -1,21 +1,29 @@
 <!-- main -->
 <template>
     <div class="db-main">
-        <mainbar></mainbar>
+        <mainbar @switchLocation="getCityMovie"></mainbar>
+
         <main class="movie">
-            <van-tabs class="movie-tabs" v-model="active" sticky :line-width="190" color="#07d714">
-                <section class="movie-list-wrapper">
-                    <van-tab title="正在热映">
-                        <van-list
-                            v-model="inTheatersLoading"
-                            :finished="inTheatersfinished"
-                            finished-text="没有更多了"
-                            @load="getInTheatersMovies"
-                            >
-                            <movie-list :data="inTheatersMovies"></movie-list>
-                        </van-list>
-                    </van-tab>
-                </section>
+            <van-tabs class="movie-tabs" v-model="active" sticky swipeable
+              :line-width="190" color="#07d714">
+              
+                <van-tab title="正在热映">
+                    <section class="movie-list-wrapper">
+                        <!-- <van-pull-refresh
+                        v-model="inTeatersRefreshing"
+                        @refresh="onRefresh(0)"
+                        > -->
+                            <van-list
+                                v-model="inTheatersLoading"
+                                :finished="inTheatersfinished"
+                                finished-text="没有更多了"
+                                @load="getInTheatersMovies"
+                                >
+                                <movie-list :data="inTheatersMovies"></movie-list>
+                            </van-list>
+                        <!-- </van-pull-refresh> -->
+                    </section>
+                </van-tab>
                 <van-tab title="即将上映">
                     <!-- 我明白了，有滚动条的才能监听到scroll -->
                     <section id="coming-parent" class="movie-list-wrapper" @scroll="onScroll">
@@ -25,14 +33,14 @@
                             finished-text="没有更多了"
                             @load="getComingSoonMovies"
                             >
-                            <movie-list :data="comingSoonMovies" movieListType="comingSoon"
-                            ></movie-list>
+                            <movie-list :data="comingSoonMovies" movieListType="comingSoon"></movie-list>
                         </van-list>
                     </section>
                 </van-tab>
             </van-tabs>
         </main>
     </div>
+    
 </template>
 
 <script>
@@ -68,31 +76,45 @@ export default {
         ])
     },
     methods: {
-        // 判断资源是否加载完成
+        // 判断资源是否全部加载
         checkMore (res) {
             return (!res.subjects.length || res.start + res.count > res.total);
         },
+
+        // 切换城市重新获取热映电影
+        getCityMovie() {
+            this.inTheatersMovies = []
+            this.inTheatersIndex = 0
+            this.inTheatersLoading = false
+            this.inTheatersfinished = false
+            // console.log(this.inTheatersMovies)
+            this.getInTheatersMovies()
+            // console.log('city')
+        },
         getInTheatersMovies() {
+            if(this.location === '') return ;   // 未获取城市时显示加载状态，不加载电影列表
             let params = {
                 city: this.location,
                 start: this.inTheatersIndex,
                 count: 10,
             }
+            if(this.inTheatersIndex === 0) this.inTheatersMovies = [];
             getInTheaters(params).then(res => {
-                // console.log(res);
+                // console.log('index', this.inTheatersIndex)
                 this.inTheatersIndex += res.count;
                 this.inTheatersMovies.push(...res.subjects);
                 this.inTheatersLoading = false;
                 this.inTheatersfinished = this.checkMore(res);
-            })
+            }).catch(err => console.log(err))
         },
+
+
         getComingSoonMovies() {
             let params = {
                 start: this.comingSoonIndex,
                 count: 10,
             }
             getComingSoon(params).then(res => {
-                // console.log(res);
                 this.comingSoonIndex += res.count;
                 this.comingSoonMovies.push(...res.subjects);
                 this.comingSoonLoading = false;
@@ -104,7 +126,6 @@ export default {
         // 这里父子组件交互太多了，用到太多子组件中的东西，不太直观，应该吧section中的都封装到movie-list中
         // 先这样吧...
         onScroll() {
-            console.log(1)
             let items = document.getElementsByClassName("coming-soon-wrapper"), // 电影cell elements
                 dates = document.getElementsByClassName("movie-date"), // movie-date elements
                 parent = document.getElementById("coming-parent"), 
@@ -116,15 +137,15 @@ export default {
             }
             // tops找到第一个小于scrollTop的index
             let index = tops.length - tops.reverse().findIndex(top => {
-                return top <= parent.scrollTop
+                return top <= parent.scrollTop-20
             })-1;
             // 为其他cell去除style
             for(let i = 0; i < dates.length; i++) {
-                console.log(i)
                 if(i !== index) dates[i].removeAttribute('style')
             }
+            if(index < 0 || index >= tops.length) return ;
             // 设置吸顶
-            dates[index].setAttribute('style', `position: fixed; top: ${height}px; z-index: 1;`)
+            dates[index].setAttribute('style', `position: fixed; top: ${height-1}px; z-index: 1;`)
         }
     },
     mounted () {

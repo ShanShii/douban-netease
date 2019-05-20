@@ -16,6 +16,7 @@
     "postcss-px-to-viewport": "^1.1.0",
     "postcss-url": "^8.0.0",
     "postcss-write-svg": "^3.0.1",
+    "rgbaster": "^2.1.1",
     "vant": "^1.6.16",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",

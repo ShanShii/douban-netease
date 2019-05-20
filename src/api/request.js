@@ -29,7 +29,9 @@ services = {
 for (let service in services) {
     services[service].interceptors.request.use(
         config => {
-            // removePending(config); //在一个ajax发送前执行一下取消操作
+            removePending(config); //在一个ajax发送前执行一下取消操作
+            // 这里突然变得很有必要，因为在“正在热映”中不知道为什么根据定位切换城市后，会发起两次0-10的请求
+            // 改了改又出现了很多其他bug，只能用取消请求来搞一下了
             config.cancelToken = new cancelToken((c)=>{
                 pending.push({ u: config.url + '&' + config.method, f: c });
             });

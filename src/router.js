@@ -33,9 +33,16 @@ export default new Router({
           path: 'mine',
           name: 'mine',
           component: () => import('@/views/db-mine.vue'),
+        },
+        {
+          path: 'movie',
+          name: 'movie',
+          component: () => import('@/views/movie-detail'),
+          props: (route) => ({ movieId: route.query.movie_id })
         }
       ]
     },
+
 
     {
       path: '/netease',

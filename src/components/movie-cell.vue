@@ -1,6 +1,6 @@
 <!-- movie-cell -->
 <template>
-    <van-cell>
+    <van-cell @click="onClick">
         <!-- 电影描述主体 -->
         <div class="movie-item">
             <img :src="item.images.small" alt="Movie Image">
@@ -39,7 +39,7 @@
                         </template>
                     </span>
                 </div>
-                <div v-if="item.collect_count" class="has-watched">{{ item.collect_count }}人看过</div>
+                <div v-if="item.collect_count && !type" class="has-watched">{{ item.collect_count }}人看过</div>
             </div>
         </div>
     </van-cell>
@@ -47,15 +47,41 @@
 
 <script>
 export default {
-    props: ['item'], // item : movie-data
+    props: {
+        item: {
+        },
+        type: {
+            type: String,
+            default: ''
+        }
+    }, // item : movie-data
     data () {
         return {
             stars: this.item.rating.stars*0.1
         };
+    },
+    methods: {
+        // 进入电影详情页
+        onClick() {
+            this.$router.push({name: 'movie', query: {
+                movie_id: this.item.id
+            }})
+        }
     }
 }
 
 </script>
-<style lang='scss' scoped>
-    
+<style lang='scss'>
+    .van-cell::after {
+        content: ' ';
+        position: absolute;
+        pointer-events: none;
+        box-sizing: border-box;
+        left: 15px;
+        right: 15px;
+        bottom: 0;
+        -webkit-transform: scaleY(0.7);
+        transform: scaleY(0.7);
+        border-bottom: 1px solid #ebedf0;
+    }
 </style>

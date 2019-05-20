@@ -17,16 +17,17 @@ export function getMovieList(params) {
     return request({
         url: movie + '/top250',
         method: 'get',
-        params,
+        params
     })
 }
 
 // 正在热映
 export function getInTheaters(params) {
+    // console.log('request', params.start, 'city', params.city)
     return request({
         url: movie + '/in_theaters',
         method: 'get',
-        params,
+        params
     })
 }
 
@@ -35,8 +36,14 @@ export function getComingSoon(params) {
     return request({
         url: movie + '/coming_soon',
         method: 'get',
-        params,
+        params
     })
 }
 
-// http://api.douban.com/v2/movie/subject/26004132?apikey=0b2bdeda43b5688921839c8ecb20399b  电影详情
+//电影详情
+export function getMovieDetail(movieId) {
+    return request({
+        url: movie + `/subject/${movieId}`,
+        method: 'get'
+    })
+}

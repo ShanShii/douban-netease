@@ -89,8 +89,9 @@ export default {
     },
     watch: {
         location: function() {
-            // console.log(this.location);
+            // console.log('*', this.location);
             this.setLocation(this.location);
+            this.$emit("switchLocation");
         }
     },
     mounted() {
