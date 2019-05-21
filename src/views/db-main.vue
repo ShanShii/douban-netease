@@ -141,11 +141,11 @@ export default {
             })-1;
             // 为其他cell去除style
             for(let i = 0; i < dates.length; i++) {
-                if(i !== index) dates[i].removeAttribute('style')
+                if(i !== index) dates[i].removeAttribute('style');
             }
             if(index < 0 || index >= tops.length) return ;
             // 设置吸顶
-            dates[index].setAttribute('style', `position: fixed; top: ${height-1}px; z-index: 1;`)
+            dates[index].setAttribute('style', `position: fixed; top: ${height-1}px; z-index: 1;`);
         }
     },
     mounted () {
@@ -158,8 +158,7 @@ export default {
     position: relative;
     margin-top: 50px;
     width: 100%;
-    // 这里修改是应为van-tabs的tab__wrap z-index=99 太高了，导致两个头一直显示，影响后面的popUp
-    z-index: 0; 
+    
     .movie-list-wrapper {
         position: fixed;
         top: 94px;

@@ -1,7 +1,9 @@
 <!-- 电影详情页 -->
 <template>
     <div id="movie-detail" v-if="loaded">
+        <!-- 导航栏 -->
         <van-nav-bar class="nav" fixed left-arrow
+          ref="nav"
           @click-left="back"
           @click-right="share">
             <span slot="title" class="iconfont">
@@ -9,12 +11,13 @@
             </span>
             <i class="iconfont iconshare" slot="right"></i>
         </van-nav-bar>
-        
+        <!-- 海报 -->
         <div class="movie-image" ref="movieImage">
             <img :src="movie.images.medium" alt="poster">
         </div>
-
+        <!-- 电影详情主体 -->
         <main class="movie">
+            <!-- 描述 -->
             <section class="movie-desc">
                 <div class="caption">
                     <div class="title">
@@ -30,7 +33,7 @@
                         <p>片长：{{ movie.durations[0] }}</p>
                     </div>
                 </div>
-
+                <!-- 评分 -->
                 <div class="rating">
                     <p class="rating-title">豆瓣评分</p>
                     <template v-if="stars > 0">
@@ -43,24 +46,40 @@
                 </div>
             </section>
 
+            <!-- 想看/看过 -->
             <div class="selection">
                 <van-button class="want" plain type="warning">想看</van-button>
                 <van-button class="watched" plain type="warning">
                     看过 <span font-size="16px">☆ ☆ ☆ ☆ ☆</span>
                 </van-button>
             </div>
+
+            <!-- 简介 -->
             <section class="movie-summary">
-
+                <span class="title">简介</span>
+                <p class="main hide" ref="summary">{{ movie.summary }}</p>
+                <span class="spread" ref="spread" @click="spread">展开</span>
             </section>
+
+            <!-- 影人 -->
             <section class="movie-casts">
+                <p class="title">影人</p>
+                <div class="casts-wrapper">
+                    <template v-for="(items) in [movie.directors, movie.casts]">
+                        <figure class="cast-item" v-for="(item) in items" :key="item.id">
+                            <img :src="item.avatars.small" alt="cast_pic">
+                            <figcaption>
+                                <p class="name">{{ item.name }}</p>
+                                <p>{{items===movie.directors?"导演" : "演员"}}</p>    
+                            </figcaption>
+                        </figure>                        
+                    </template>
+                </div>
+            </section>
+            <!-- 预告片/剧照 | 403forbidden拿不到....-->
 
-            </section>
-            <section class="movie-photos">
-
-            </section>
-            <section class="comments">
-                
-            </section>
+            <!-- 评论区 -->
+            <comments :comments="movie.popular_comments" :reviews="movie.popular_reviews"></comments>    
         </main>
 
     </div>
@@ -71,11 +90,15 @@ import {
     getMovieDetail
 } from '../api/douban'
 import analyze from 'rgbaster'
+import comments from '@/components/detail-comments.vue'
 
 export default {
     props: [
         'movieId'    // 路由组件query传参
     ],
+    components: {
+        comments
+    },
     data () {
         return {
             movie: null,
@@ -85,10 +108,14 @@ export default {
     },
     methods: {
         back() {
-
+            this.$router.go(-1);
         },
         share() {
 
+        },
+        spread() {
+            this.$refs.summary.classList.remove("hide")
+            this.$refs.spread.classList.add("none")
         },
         async getMovie() {
             this.movie = await getMovieDetail(this.movieId)
@@ -101,9 +128,10 @@ export default {
             this.loaded = true  // 做一个loading
             this.$nextTick(() => {
                 this.$refs.movieImage.style.backgroundColor = `${result[10].color}`
+                this.$refs.nav.style.backgroundColor = `${result[10].color}`
                 this.stars = this.movie.rating.stars*0.1
                 // this.rating_count = Object.values(this.movie.rating.details).reduce((pre, cur) => pre+cur)
-                // bgc.setAttribute('style', `background-color: ${result[10].color};`)
+                // console.log(this.$refs)
             })
         }
     },
@@ -137,6 +165,9 @@ export default {
     padding: 15px;
 }
 #movie-detail {
+    p {
+        margin: 1px 0;
+    }
     .movie-image {
         position: relative;
         height: 400px;
@@ -154,6 +185,7 @@ export default {
         &-desc {
             @include inner-padding();
             display: flex;
+            /* 电影描述 */
             .caption {
                 width: 70%;
                 .title {
@@ -164,11 +196,9 @@ export default {
                 .info {
                     color: gray;
                     font-size: 0.8em;
-                    p {
-                        margin: 1px 0;
-                    }
                 }
             }
+            /* 豆瓣评分 */
             .rating {
                 display: flex;
                 flex-wrap: wrap;
@@ -176,26 +206,27 @@ export default {
                 align-content: center;
                 width: 25%;
                 height: 80px;
+                padding: 5px;
                 // border: 1px solid;
                 text-align: center;
                 color: gray;
                 font-size: 0.8em;
 
                 box-shadow: .5px .5px 5px;
+                &-title {
+                    width: 100%;
+                }
                 &-average {
                     font-size: 2em;
                     font-weight: bold;
                     color: black;
                 }
                 &-stars {
-                    line-height: 3.4vw;
-                }
-                p {
-                    margin: 1px 0;
+                    line-height: 2.4vw;
                 }
             }
         }
-
+        /* 想看/看过 */
         .selection {
             padding: 0 15px;
             display: flex;
@@ -210,6 +241,92 @@ export default {
             }
             .watched {
                 flex: auto;
+            }
+        }
+
+        &-summary {
+            @include inner-padding();
+            position: relative;
+            .title {
+                display: block;
+                color: gray;
+                font-size: 0.8em;
+                margin-bottom: 5px;
+            }
+
+            /* css line-clamp, firefox不兼容
+            .main {
+                margin: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 4;
+                -webkit-box-orient: vertical
+            } */
+            .main{
+                margin: 0;
+                font-size: 14px;
+                color: #4A4A4A;
+                line-height: 1.5em;
+                position: relative;
+                text-overflow: ellipsis;
+            }
+
+            /* hack技巧实现line-clamp展开操作 */
+            .hide {
+                overflow: hidden;
+                height: 17.333vw;   /* height放到hide, 去除hide后框的高度自适应，解决文字超框显示问题 */
+            }
+            .hide::after {
+                content: '';
+                text-align: center;
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 18%;
+                height: 1.8em;
+                background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+            }
+            .spread {
+                font-size: 12px;
+                color: forestgreen;
+                position: absolute;
+                right: 20px;
+                bottom: 19px;
+            }
+            .none {
+                display: none;
+            }
+        }
+        /* 影人 */
+        &-casts {
+            @include inner-padding();
+            padding-top: 5px;
+            color: gray;
+            font-size: 0.85em;
+            .title {
+                padding-bottom: 10px;
+            }
+            .casts-wrapper {
+                display: flex;
+                height: 200px;
+                overflow-x: scroll;
+                overflow-y: hidden;
+                text-align: center;
+                figure {
+                    margin: 0 5px 0 0;
+                }
+                img {
+                    height: 150px;
+                }
+                .name {
+                    width: 102px;
+                    font-size: 16px;
+                    color: black;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
             }
         }
     }
