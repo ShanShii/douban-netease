@@ -1,13 +1,17 @@
 <!-- 电影详情页 -->
 <template>
-    <div id="movie-detail" v-if="loaded">
+    <div id="movie-detail" v-if="loaded" ref="parent" @scroll="onScroll">
         <!-- 导航栏 -->
         <van-nav-bar class="nav" fixed left-arrow
           ref="nav"
           @click-left="back"
           @click-right="share">
-            <span slot="title" class="iconfont">
-                <i class="iconfont iconPopcorn_A_px"></i>电影
+            <span slot="title" class="iconfont" ref="navTitle">
+                <template v-if="sclTop < top">
+                    <i class="iconfont iconPopcorn_A_px"></i>
+                    <span>电影</span>
+                </template>
+                <span v-else>{{ movie.title }}</span>
             </span>
             <i class="iconfont iconshare" slot="right"></i>
         </van-nav-bar>
@@ -16,7 +20,7 @@
             <img :src="movie.images.medium" alt="poster">
         </div>
         <!-- 电影详情主体 -->
-        <main class="movie">
+        <main class="movie" ref="main">
             <!-- 描述 -->
             <section class="movie-desc">
                 <div class="caption">
@@ -104,6 +108,8 @@ export default {
             movie: null,
             loaded: false,
             stars: 0,
+            sclTop: 0,
+            top: 0
         };
     },
     methods: {
@@ -111,7 +117,10 @@ export default {
             this.$router.go(-1);
         },
         share() {
-
+        },
+        onScroll(e) {
+            this.sclTop = e.target.scrollTop
+            this.top = this.$refs.main.offsetTop
         },
         spread() {
             this.$refs.summary.classList.remove("hide")
@@ -142,6 +151,9 @@ export default {
 
 </script>
 <style lang='scss' scoped>
+.none {
+    display: none;
+}
 .iconPopcorn_A_px {
     @extend .iconshare;
     left: 1px;
@@ -165,6 +177,10 @@ export default {
     padding: 15px;
 }
 #movie-detail {
+    /* 子组件中产生滚动条以便监听 */
+    height: 100vh;
+    overflow-x: hide;
+    overflow-y: auto;
     p {
         margin: 1px 0;
     }
@@ -226,6 +242,7 @@ export default {
                 }
             }
         }
+
         /* 想看/看过 */
         .selection {
             padding: 0 15px;
@@ -244,6 +261,7 @@ export default {
             }
         }
 
+        /* 简介 */
         &-summary {
             @include inner-padding();
             position: relative;
