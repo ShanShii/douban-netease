@@ -39,6 +39,12 @@ export default new Router({
           name: 'movie',
           component: () => import('@/views/movie-detail'),
           props: (route) => ({ movieId: route.query.movie_id })
+        },
+        {
+          path: 'celebrity',
+          name: 'celebrity',
+          component: () => import('@/views/db-celebrity'),
+          props: (route) => ({ celebrityId: route.query.celebrity_id })
         }
       ]
     },

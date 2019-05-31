@@ -94,7 +94,8 @@ export default {
         getInTheatersMovies() {
             if(this.location === '') return ;   // 未获取城市时显示加载状态，不加载电影列表
             let params = {
-                city: this.location,
+                // replace切除
+                city: this.location.replace(/省|市|自治区|特别行政区|壮族|回族|维吾尔/g,""),
                 start: this.inTheatersIndex,
                 count: 10,
             }

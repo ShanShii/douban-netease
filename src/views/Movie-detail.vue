@@ -2,19 +2,9 @@
 <template>
     <div id="movie-detail" v-if="loaded" ref="parent" @scroll="onScroll">
         <!-- 导航栏 -->
-        <van-nav-bar class="nav" fixed left-arrow
-          ref="nav"
-          @click-left="back"
-          @click-right="share">
-            <span slot="title" class="iconfont" ref="navTitle">
-                <template v-if="sclTop < top">
-                    <i class="iconfont iconPopcorn_A_px"></i>
-                    <span>电影</span>
-                </template>
-                <span v-else>{{ movie.title }}</span>
-            </span>
-            <i class="iconfont iconshare" slot="right"></i>
-        </van-nav-bar>
+        <navbar ref="nav"
+            :title="sclTop<=top ? '电影':movie.title"
+            :flag="sclTop<=top? true:false"></navbar>
         <!-- 海报 -->
         <div class="movie-image" ref="movieImage">
             <img :src="movie.images.medium" alt="poster">
@@ -70,7 +60,7 @@
                 <p class="title">影人</p>
                 <div class="casts-wrapper">
                     <template v-for="(items) in [movie.directors, movie.casts]">
-                        <figure class="cast-item" v-for="(item) in items" :key="item.id">
+                        <figure class="cast-item" v-for="(item) in items" :key="item.id" @click="entryCelebrity(item.id)">
                             <img :src="item.avatars.small" alt="cast_pic">
                             <figcaption>
                                 <p class="name">{{ item.name }}</p>
@@ -81,7 +71,7 @@
                 </div>
             </section>
             <!-- 预告片/剧照 | 403forbidden拿不到....-->
-
+            <!-- <img :src="movie.photos.image" alt="."> -->
             <!-- 评论区 -->
             <comments :comments="movie.popular_comments" :reviews="movie.popular_reviews"></comments>    
         </main>
@@ -95,13 +85,15 @@ import {
 } from '../api/douban'
 import analyze from 'rgbaster'
 import comments from '@/components/detail-comments.vue'
+import navbar from '@/components/navbar.vue'
 
 export default {
     props: [
         'movieId'    // 路由组件query传参
     ],
     components: {
-        comments
+        comments,
+        navbar
     },
     data () {
         return {
@@ -113,11 +105,6 @@ export default {
         };
     },
     methods: {
-        back() {
-            this.$router.go(-1);
-        },
-        share() {
-        },
         onScroll(e) {
             this.sclTop = e.target.scrollTop
             this.top = this.$refs.main.offsetTop
@@ -126,8 +113,14 @@ export default {
             this.$refs.summary.classList.remove("hide")
             this.$refs.spread.classList.add("none")
         },
+        entryCelebrity(id) {
+            this.$router.push({name: 'celebrity', query:{
+                celebrity_id: id
+            }})
+        },
         async getMovie() {
             this.movie = await getMovieDetail(this.movieId)
+            // 分析图片主色设置背景色
             const result = await analyze(this.movie.images.medium, {
                 ignore: [ 'rgb(255,255,255)', 'rgb(0,0,0)' ],
                 scale: 0.5
@@ -137,10 +130,10 @@ export default {
             this.loaded = true  // 做一个loading
             this.$nextTick(() => {
                 this.$refs.movieImage.style.backgroundColor = `${result[10].color}`
-                this.$refs.nav.style.backgroundColor = `${result[10].color}`
-                this.stars = this.movie.rating.stars*0.1
-                // this.rating_count = Object.values(this.movie.rating.details).reduce((pre, cur) => pre+cur)
                 // console.log(this.$refs)
+                // 子组件navbar 的 ref = VueComponent 打印出来就知道怎么用了，加个$el
+                this.$refs.nav.$el.style.backgroundColor = `${result[10].color}`
+                this.stars = this.movie.rating.stars*0.1
             })
         }
     },
@@ -154,24 +147,8 @@ export default {
 .none {
     display: none;
 }
-.iconPopcorn_A_px {
-    @extend .iconshare;
-    left: 1px;
-    font-size: 23px;
-}
-.iconshare {
-    position: relative;
-    top: 1px;
-}
 
-.nav {
-    height: 46px;
-    background-color: transparent;
-    border: none;
-    .van-icon, .iconfont {
-        color: white;
-    }
-}
+
 @mixin inner-padding {
     width: calc(100%-30px);
     padding: 15px;
@@ -179,7 +156,7 @@ export default {
 #movie-detail {
     /* 子组件中产生滚动条以便监听 */
     height: 100vh;
-    overflow-x: hide;
+    overflow-x: hidden;
     overflow-y: auto;
     p {
         margin: 1px 0;
@@ -194,7 +171,6 @@ export default {
             margin: 0 auto;
             vertical-align: middle;
             height: 330px;
-            z-index: 1100;
         }
     }
     .movie {
@@ -205,7 +181,7 @@ export default {
             .caption {
                 width: 70%;
                 .title {
-                    font-size: 1.5em;
+                    font-size: 1.25em;
                     font-weight: bold;
                     margin-bottom: 15px;
                 }
@@ -221,9 +197,9 @@ export default {
                 justify-content: center;
                 align-content: center;
                 width: 25%;
-                height: 80px;
+                height: 75px;
                 padding: 5px;
-                // border: 1px solid;
+                margin-left: 5px;
                 text-align: center;
                 color: gray;
                 font-size: 0.8em;
@@ -233,7 +209,7 @@ export default {
                     width: 100%;
                 }
                 &-average {
-                    font-size: 2em;
+                    font-size: 1.5em;
                     font-weight: bold;
                     color: black;
                 }
@@ -311,9 +287,6 @@ export default {
                 position: absolute;
                 right: 20px;
                 bottom: 19px;
-            }
-            .none {
-                display: none;
             }
         }
         /* 影人 */

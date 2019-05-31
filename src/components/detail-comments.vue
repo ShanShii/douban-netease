@@ -88,7 +88,10 @@ p {
             font-weight: bold;
         }
         .content {
-            margin-bottom: 0;
+            margin: 10px 0;
+        }
+        .date {
+            color: grey;
         }
     }
 }

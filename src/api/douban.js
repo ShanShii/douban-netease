@@ -47,3 +47,11 @@ export function getMovieDetail(movieId) {
         method: 'get'
     })
 }
+
+// 影人详情
+export function getCelebrityDetail(celebrityId) {
+    return request({
+        url: movie + `/celebrity/${celebrityId}`,
+        method: 'get'
+    })
+}

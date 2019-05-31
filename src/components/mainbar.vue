@@ -1,4 +1,4 @@
-<!-- navbar -->
+<!-- 主页定位navbar -->
 <template>
     <div id="nav">
         <nav class="top-nav">
@@ -6,7 +6,7 @@
                 {{ location }} <van-icon size="12px" name="arrow-down" />
             </div>
             <van-search class="search" placeholder="请输入搜索关键词"
-                 @click="onClickRight" v-model="searchValue"/>
+                @click="onClickRight" v-model="searchValue"/>
         </nav>
 
         <van-popup v-model="popShow" position="right">
@@ -89,7 +89,7 @@ export default {
     },
     watch: {
         location: function() {
-            // console.log('*', this.location);
+            console.log('*', this.location);
             this.setLocation(this.location);
             this.$emit("switchLocation");
         }
@@ -100,7 +100,7 @@ export default {
 }
 
 </script>
-<style lang='scss'>
+<style lang='scss' scoped>
     #nav {
         position: fixed;
         top: 0;
@@ -111,7 +111,7 @@ export default {
         color: #07c160;
         border-bottom: 1px solid #ebedf0;
         background-color: #fff;
-        .top-nav {
+        /deep/ .top-nav {
             display: flex;
             height: 50px;
             font-size: 14px;
@@ -124,6 +124,7 @@ export default {
                 i.van-icon.van-icon-search {
                     color: #07c160;
                     // 这里不能scoped，因为这是searchbar的内容，scoped加不上去了
+                    // updated -> 改用深度选择器/deep/解决
                 }
             }
         }
