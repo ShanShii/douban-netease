@@ -16,5 +16,9 @@ export default {
 
 </script>
 <style lang='scss'>
-    
+/*     @media screen and (min-width: 500px) {
+        #app /deep/ * {
+            width: 375px;
+        }
+    } */
 </style>

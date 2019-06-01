@@ -4,7 +4,9 @@
         <!-- 导航栏 -->
         <navbar ref="nav"
             :title="sclTop<=top ? '电影':movie.title"
-            :flag="sclTop<=top? true:false"></navbar>
+            :flag="sclTop<=top? true:false"
+            :color="deep? 'white':'black'"></navbar>
+            <!-- title: navbar标题; flag: 判断高低变换标题; color: 根据背景颜色设置navbar 字体颜色 -->
         <!-- 海报 -->
         <div class="movie-image" ref="movieImage">
             <img :src="movie.images.medium" alt="poster">
@@ -61,7 +63,7 @@
                 <div class="casts-wrapper">
                     <template v-for="(items) in [movie.directors, movie.casts]">
                         <figure class="cast-item" v-for="(item) in items" :key="item.id" @click="entryCelebrity(item.id)">
-                            <img :src="item.avatars.small" alt="cast_pic">
+                            <img :src="item.avatars?item.avatars.small:failImg" alt="cast_pic">
                             <figcaption>
                                 <p class="name">{{ item.name }}</p>
                                 <p>{{items===movie.directors?"导演" : "演员"}}</p>    
@@ -97,12 +99,16 @@ export default {
     },
     data () {
         return {
+            failImg: require('@/assets/timg.gif'),
             movie: null,
             loaded: false,
             stars: 0,
             sclTop: 0,
-            top: 0
+            top: 0,
+            deep: true
         };
+    },
+    computed: {
     },
     methods: {
         onScroll(e) {
@@ -129,6 +135,15 @@ export default {
             console.log(`The secondary color is ${result[1].color} with ${result[1].count} occurrence(s)`)
             this.loaded = true  // 做一个loading
             this.$nextTick(() => {
+                let [r, g, b] = result[10].color.slice(4, -1).split(',')
+                if(r*0.299 + g*0.578 + b*0.114 >= 192)
+                { //浅色
+                    this.deep = false
+                }
+                else
+                {  //深色
+                    this.deep = true
+                }
                 this.$refs.movieImage.style.backgroundColor = `${result[10].color}`
                 // console.log(this.$refs)
                 // 子组件navbar 的 ref = VueComponent 打印出来就知道怎么用了，加个$el
@@ -308,6 +323,7 @@ export default {
                     margin: 0 5px 0 0;
                 }
                 img {
+                    max-width: 120px;
                     height: 150px;
                 }
                 .name {

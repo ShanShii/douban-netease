@@ -2,8 +2,8 @@
 <!-- <     title    share -->
 <template>
     <!-- 导航栏 -->
-    <van-nav-bar class="nav" fixed left-arrow
-        ref="nav"
+    <van-nav-bar class="nav" fixed left-arrow ref="nav"
+        :style="{color: color}"
         @click-left="back"
         @click-right="share">
         <span slot="title" class="iconfont" ref="navTitle">
@@ -21,7 +21,8 @@
 export default {
     props: [
         'title',
-        'flag'
+        'flag',
+        'color'
     ],
     data () {
         return {
@@ -49,11 +50,11 @@ export default {
 }
 
 .nav {
+    /deep/ * {
+        color: inherit;
+    }
     height: 46px;
     background-color: transparent;
     border: none;
-    .van-icon, .iconfont {
-        color: white;
-    }
 }
 </style>
