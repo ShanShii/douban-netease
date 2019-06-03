@@ -66,6 +66,7 @@ export default {
 }
 p {
     margin: 0;
+    line-height: 1.5em;
 }
 .rating {
     display: inline-block;

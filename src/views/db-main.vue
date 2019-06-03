@@ -2,7 +2,7 @@
 <template>
     <div class="db-main">
         <mainbar @switchLocation="getCityMovie"></mainbar>
-
+        
         <main class="movie">
             <van-tabs class="movie-tabs" v-model="active" sticky swipeable
               :line-width="190" color="#07d714">

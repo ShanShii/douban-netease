@@ -1,16 +1,19 @@
 /* 
 TODO:
     403 catch
-    loading 加载状态
+    图片懒加载，loading 加载状态
+    骨架屏
     个人页
     推荐页（轮播窗和豆瓣还原）
     登陆
     搜索
     本地存储
     抽象合并，进一步重构
+    webpack打包
  */
 <!-- 影人页 -->
 <template>
+<div>
     <div id="celebrity" @scroll="onScroll" v-if="loaded">
         <!-- 导航栏 -->
         <navbar ref="nav"
@@ -64,7 +67,7 @@ TODO:
                             {{ titleList[index-1] + '：'}}
                         </td>
                         <td v-if="index!==5">
-                            {{ informationList[index-1] }}
+                            {{ informationList[index-1]||'暂无' }}
                         </td>
                         <td v-else>
                             <template v-for="(name, index) in informationList[index-1]">
@@ -95,6 +98,12 @@ TODO:
             </div>
         </div>
     </div>
+
+    <!-- svg loading -->
+    <div class="wrapper" v-else>
+        <img src="@/assets/ball-triangle.svg" alt="loading..." class="loading">
+    </div>
+</div>
 </template>
 
 <script>
@@ -185,6 +194,13 @@ export default {
 /* $title-text-space: 5px;
 $sections-space: 15px;
 用到的地方太少了，每必要 */
+.wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 #celebrity {
     overflow-x: hidden;
     overflow-y: auto;
