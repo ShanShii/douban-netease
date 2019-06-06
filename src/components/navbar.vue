@@ -54,7 +54,7 @@ export default {
         color: inherit;
     }
     height: 46px;
-    background-color: transparent;
+    background-color: gray;
     border: none;
 }
 </style>

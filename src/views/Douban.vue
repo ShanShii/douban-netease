@@ -1,7 +1,11 @@
 <!-- douban主承载页 -->
 <template>
     <div id="douban">
-        <router-view></router-view>
+        <keep-alive>
+            <router-view v-if="$route.meta.keepAlive"></router-view>
+        </keep-alive>
+        <router-view v-if="!$route.meta.keepAlive"></router-view>
+        
         <tabbar :pos="index"></tabbar>
         <div id="allmap"></div>
     </div>

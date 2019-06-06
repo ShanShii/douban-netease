@@ -6,17 +6,16 @@ TODO:
     个人页
     推荐页（轮播窗和豆瓣还原）
     登陆
-    搜索
+    搜索    *做不了了...api挂了
     本地存储
     抽象合并，进一步重构
     webpack打包
  */
 <!-- 影人页 -->
 <template>
-<div>
     <div id="celebrity" @scroll="onScroll" v-if="loaded">
         <!-- 导航栏 -->
-        <navbar ref="nav"
+        <navbar ref="nav" class="nav"
             :title="sclTop<=top? '影人':data.title"
             :flag="sclTop<=top? true:false"></navbar>
         <!-- 海报 -->
@@ -51,7 +50,7 @@ TODO:
             </div>
 
             <!-- 详细个人简介弹出层 -->
-            <van-popup class="popup" v-model="summaryShow" position="right" :overlay="false">
+            <van-popup class="popup" v-model="summaryShow" position="right">
                 <van-nav-bar fixed left-arrow @click-left="closeSummary"></van-nav-bar>
                 <div class="popup-header">
                     <h3 class="name">{{ data.name }}</h3>
@@ -100,10 +99,11 @@ TODO:
     </div>
 
     <!-- svg loading -->
-    <div class="wrapper" v-else>
+    <!-- <div class="wrapper" v-else>
         <img src="@/assets/ball-triangle.svg" alt="loading..." class="loading">
-    </div>
-</div>
+    </div> -->
+    <!-- ↓ -->
+    <loading v-else></loading>
 </template>
 
 <script>
@@ -111,13 +111,15 @@ import {
     getCelebrityDetail
 } from '@/api/douban.js'
 import navbar from '@/components/navbar'
+import loading from '@/components/loading'
 
 export default {
     props: [
         'celebrityId'
     ],
     components: {
-        navbar
+        navbar,
+        loading
     },
     data () {
         return {
@@ -194,13 +196,17 @@ export default {
 /* $title-text-space: 5px;
 $sections-space: 15px;
 用到的地方太少了，每必要 */
-.wrapper {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+// .wrapper {
+//     width: 100%;
+//     height: 100vh;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+// }
+/deep/ .nav {
+    background-color: transparent;
 }
+
 #celebrity {
     overflow-x: hidden;
     overflow-y: auto;

@@ -7,9 +7,10 @@
             :flag="sclTop<=top? true:false"
             :color="deep? 'white':'black'"></navbar>
             <!-- title: navbar标题; flag: 判断高低变换标题; color: 根据背景颜色设置navbar 字体颜色 -->
+            
         <!-- 海报 -->
         <div class="movie-image" ref="movieImage">
-            <img :src="movie.images.medium" alt="poster">
+            <img :src="movie.images.medium" alt="poster" onerror="console.log('111')">
         </div>
         <!-- 电影详情主体 -->
         <main class="movie" ref="main">
@@ -77,8 +78,8 @@
             <!-- 评论区 -->
             <comments :comments="movie.popular_comments" :reviews="movie.popular_reviews"></comments>    
         </main>
-
     </div>
+    <loading v-else></loading>
 </template>
 
 <script>
@@ -86,29 +87,29 @@ import {
     getMovieDetail
 } from '../api/douban'
 import analyze from 'rgbaster'
-import comments from '@/components/detail-comments.vue'
-import navbar from '@/components/navbar.vue'
-
+import comments from '@/components/detail-comments'
+import navbar from '@/components/navbar'
+import loading from '@/components/loading'
 export default {
     props: [
         'movieId'    // 路由组件query传参
     ],
     components: {
         comments,
-        navbar
+        navbar,
+        loading
     },
     data () {
         return {
-            failImg: require('@/assets/timg.gif'),
-            movie: null,
-            loaded: false,
-            stars: 0,
-            sclTop: 0,
-            top: 0,
-            deep: true
+            failImg: require('@/assets/timg.gif'),  // 电影人头像加载失败的fallback
+            movie: null,    // 电影数据
+            loaded: false,  // 加载状态
+            stars: 0,       // 评分值
+            sclTop: 0,      // 滚动距离
+            top: 0,         // 主题距离顶部的高度offsetTop
+            deep: true,     // 判断nav字体颜色是否应为深色
+            color: null     // 分析出的背景色,形式应该为[{},{}...]
         };
-    },
-    computed: {
     },
     methods: {
         onScroll(e) {
@@ -127,29 +128,40 @@ export default {
         async getMovie() {
             this.movie = await getMovieDetail(this.movieId)
             // 分析图片主色设置背景色
-            const result = await analyze(this.movie.images.medium, {
-                ignore: [ 'rgb(255,255,255)', 'rgb(0,0,0)' ],
-                scale: 0.5
-            })
-            console.log(`The dominant color is ${result[0].color} with ${result[0].count} occurrence(s)`)
-            console.log(`The secondary color is ${result[1].color} with ${result[1].count} occurrence(s)`)
+            try {
+                // 这里图片跨域偶尔会有问题，没想到为啥，毕竟这个不是我写的...try catch一下
+                // nav和图片框默认背景色为'gray'
+                // 其实这个东西效果一般,可能是我不会用吧...
+                this.color = await analyze(this.movie.images.medium, {
+                    ignore: [ 'rgb(255,255,255)', 'rgb(0,0,0)' ],
+                    scale: 0.5
+                })
+                console.log(`The dominant color is ${this.color[0].color} with ${this.color[0].count} occurrence(s)`)
+                console.log(`The secondary color is ${this.color[1].color} with ${this.color[1].count} occurrence(s)`)
+
+            } catch(err) {
+                console.log(err)
+            }
+
             this.loaded = true  // 做一个loading
-            this.$nextTick(() => {
-                let [r, g, b] = result[10].color.slice(4, -1).split(',')
-                if(r*0.299 + g*0.578 + b*0.114 >= 192)
-                { //浅色
-                    this.deep = false
-                }
-                else
-                {  //深色
-                    this.deep = true
-                }
-                this.$refs.movieImage.style.backgroundColor = `${result[10].color}`
-                // console.log(this.$refs)
-                // 子组件navbar 的 ref = VueComponent 打印出来就知道怎么用了，加个$el
-                this.$refs.nav.$el.style.backgroundColor = `${result[10].color}`
-                this.stars = this.movie.rating.stars*0.1
-            })
+            if(this.color) {
+                this.$nextTick(() => {
+                    let [r, g, b] = this.color[10].color.slice(4, -1).split(',')
+                    if(r*0.299 + g*0.578 + b*0.114 >= 192)
+                    { //浅色
+                        this.deep = false
+                    }
+                    else
+                    {  //深色
+                        this.deep = true
+                    }
+                    this.$refs.movieImage.style.backgroundColor = `${this.color[10].color}`
+                    // console.log(this.$refs)
+                    // 子组件navbar 的 ref = VueComponent 打印出来就知道怎么用了，加个$el
+                    this.$refs.nav.$el.style.backgroundColor = `${this.color[10].color}`
+                    this.stars = this.movie.rating.stars*0.1
+                })
+            }
         }
     },
     mounted() {
@@ -182,6 +194,7 @@ export default {
         padding-top: 30px;
         text-align: center;
         line-height: 400px;
+        background-color: gray;
         img {
             margin: 0 auto;
             vertical-align: middle;
@@ -304,6 +317,7 @@ export default {
                 bottom: 19px;
             }
         }
+        
         /* 影人 */
         &-casts {
             @include inner-padding();

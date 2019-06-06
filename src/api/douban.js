@@ -7,7 +7,7 @@ request.defaults.baseURL = '/dbapi';
 // 电影相关api: https://api.douban.com/v2/movie/xxx
 const movie = '/movie';
 
-// 城市列表api不知道，直接用了vant里的area表
+// 城市列表api不知道,直接mock了一下数据,用了vant里的area表
 export function getCityList() {
     return areaList;
 }

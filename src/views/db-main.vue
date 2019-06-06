@@ -24,9 +24,10 @@
                         <!-- </van-pull-refresh> -->
                     </section>
                 </van-tab>
+
                 <van-tab title="即将上映">
                     <!-- 我明白了，有滚动条的才能监听到scroll -->
-                    <section id="coming-parent" class="movie-list-wrapper" @scroll="onScroll">
+                    <section id="coming-soon" class="movie-list-wrapper" @scroll="onScroll">
                         <van-list
                             v-model="comingSoonLoading"
                             :finished="comingSoonfinished"
@@ -40,7 +41,6 @@
             </van-tabs>
         </main>
     </div>
-    
 </template>
 
 <script>
@@ -113,7 +113,9 @@ export default {
         getComingSoonMovies() {
             let params = {
                 start: this.comingSoonIndex,
-                count: 10,
+                count: 100,     // 10->100 获取多月信息*根据api反馈，100基本上是所有了，后面月份筛选实现的最简单方法
+                                // d但是这样加载时间边长了，效果比较差
+                                // 如果还是10个10个获取的话也可以，模拟触发ComingSoon就行了，不过还要做月份判断，很麻烦
             }
             getComingSoon(params).then(res => {
                 this.comingSoonIndex += res.count;
@@ -129,7 +131,7 @@ export default {
         onScroll() {
             let items = document.getElementsByClassName("coming-soon-wrapper"), // 电影cell elements
                 dates = document.getElementsByClassName("movie-date"), // movie-date elements
-                parent = document.getElementById("coming-parent"), 
+                parent = document.getElementById("coming-soon"), 
                 tops = [], // offsetTop 高度存储
                 height = parent.offsetTop; // 吸顶的位置/top高度
             // 获取即将上映中的单元高度
@@ -137,16 +139,19 @@ export default {
                 tops.push(item.offsetTop-dates[0].clientHeight) // 减去movie-date高度
             }
             // tops找到第一个小于scrollTop的index
+            console.log(parent.scrollTop-20, tops[0])
             let index = tops.length - tops.reverse().findIndex(top => {
-                return top <= parent.scrollTop-20
+                return top < parent.scrollTop-20
             })-1;
+            console.log('*', index)
             // 为其他cell去除style
             for(let i = 0; i < dates.length; i++) {
                 if(i !== index) dates[i].removeAttribute('style');
             }
             if(index < 0 || index >= tops.length) return ;
             // 设置吸顶
-            dates[index].setAttribute('style', `position: fixed; top: ${height-1}px; z-index: 1;`);
+            // height-1+30 30px为filter-sort-items的高度，-x微调
+            dates[index].setAttribute('style', `position: fixed; top: ${height+40-3}px; z-index: 1;`);
         }
     },
     mounted () {
