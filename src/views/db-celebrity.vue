@@ -4,7 +4,7 @@ TODO:
     图片懒加载，loading 加载状态
     骨架屏
     个人页
-    推荐页（轮播窗和豆瓣还原）
+    推荐页（轮播窗还原）
     登陆
     搜索    *做不了了...api挂了
     本地存储
@@ -83,7 +83,7 @@ TODO:
                 代表作品
             </div>
             <div class="works">
-                <template v-for="(item, index) in data.works">                        
+                <template v-for="(item, index) in data.works">
                     <div class="work" :key="item.subject.id" @click="entryMovieDetail(item.subject.id)">
                         <img :src="item.subject.images.small" alt="movie poster">
                         <p class="title">{{ item.subject.title }}</p>
@@ -302,15 +302,15 @@ $sections-space: 15px;
         }
 
         .popup {
+            width: 94%;
+            height: 100%;
+            padding: 0 3%;
             .van-nav-bar * {
                 color: gray;
             }
             .iconfont {
                 color: gray;
             }
-            width: 94%;
-            height: 100%;
-            padding: 0 3%;
             &-header {
                 margin-top: 60px;
                 .name { margin: 5px 0; }

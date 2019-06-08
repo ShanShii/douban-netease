@@ -4,7 +4,7 @@ import areaList from './area_list'
 
 // dbapi代理：https://api.douban.com/v2
 request.defaults.baseURL = '/dbapi';
-// 电影相关api: https://api.douban.com/v2/movie/xxx
+// 电影相关api: https://api.douban.com/v2/movie/xxx?apikey=
 const movie = '/movie';
 
 // 城市列表api不知道,直接mock了一下数据,用了vant里的area表
@@ -39,6 +39,31 @@ export function getComingSoon(params) {
         params
     })
 }
+
+// 北美票房榜
+export function getUsBoxList() {
+    return request({
+        url: movie + '/us_box',
+        method: 'get',
+    })
+}
+
+// 一周口碑榜
+export function getWeeklyList() {
+    return request({
+        url: movie + '/weekly',
+        method: 'get',
+    })
+}
+
+// 新片榜
+export function getNewList() {
+    return request({
+        url: movie + '/new_movies',
+        method: 'get',
+    })
+}
+
 
 //电影详情
 export function getMovieDetail(movieId) {

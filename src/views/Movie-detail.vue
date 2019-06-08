@@ -144,6 +144,7 @@ export default {
             }
 
             this.loaded = true  // 做一个loading
+            this.stars = this.movie.rating.stars*0.1
             if(this.color) {
                 this.$nextTick(() => {
                     let [r, g, b] = this.color[10].color.slice(4, -1).split(',')
@@ -159,7 +160,6 @@ export default {
                     // console.log(this.$refs)
                     // 子组件navbar 的 ref = VueComponent 打印出来就知道怎么用了，加个$el
                     this.$refs.nav.$el.style.backgroundColor = `${this.color[10].color}`
-                    this.stars = this.movie.rating.stars*0.1
                 })
             }
         }
