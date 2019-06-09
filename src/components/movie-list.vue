@@ -179,10 +179,10 @@ export default {
     display: flex;
     position: fixed;
     top: 93px; left: 0;
-    height: 30px; width: calc(100%-10px);
+    height: 30PX; width: calc(100%-10px);
     padding: 5px;
     font-size: 14px;
-    line-height: 30px;
+    line-height: 30PX;
     color: gray;
     justify-content: space-between;
     z-index: 2;
@@ -201,9 +201,9 @@ export default {
         pointer-events: none; /* 防止点击触发 */
         box-sizing: border-box;
         position: absolute;
-        height: 20px;
-        left: -5px;
-        top: 4px;
+        height: 20PX;
+        left: -5PX;
+        top: 4PX;
         // border-radius: 8px;
         border-left: 1px solid #999;
         -webkit-transform: scaleX(0.5);

@@ -139,11 +139,9 @@ export default {
                 tops.push(item.offsetTop-dates[0].clientHeight) // 减去movie-date高度
             }
             // tops找到第一个小于scrollTop的index
-            console.log(parent.scrollTop-20, tops[0])
             let index = tops.length - tops.reverse().findIndex(top => {
                 return top < parent.scrollTop-20
             })-1;
-            console.log('*', index)
             // 为其他cell去除style
             for(let i = 0; i < dates.length; i++) {
                 if(i !== index) dates[i].removeAttribute('style');

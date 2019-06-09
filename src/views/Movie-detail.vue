@@ -63,7 +63,7 @@
                 <p class="title">影人</p>
                 <div class="casts-wrapper">
                     <template v-for="(items) in [movie.directors, movie.casts]">
-                        <figure class="cast-item" v-for="(item) in items" :key="item.id" @click="entryCelebrity(item.id)">
+                        <figure class="cast-item" v-for="(item, index) in items" :key="item.id+index" @click="entryCelebrity(item.id)">
                             <img :src="item.avatars?item.avatars.small:failImg" alt="cast_pic">
                             <figcaption>
                                 <p class="name">{{ item.name }}</p>

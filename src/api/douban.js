@@ -1,6 +1,7 @@
 // 豆瓣 api
 import { dbservice as request } from './request';
-import areaList from './area_list'
+import fetch from './fetch'
+import { cityList } from './mUtils'
 
 // dbapi代理：https://api.douban.com/v2
 request.defaults.baseURL = '/dbapi';
@@ -9,7 +10,7 @@ const movie = '/movie';
 
 // 城市列表api不知道,直接mock了一下数据,用了vant里的area表
 export function getCityList() {
-    return areaList;
+    return cityList;
 }
 
 // top250电影列表
@@ -80,3 +81,38 @@ export function getCelebrityDetail(celebrityId) {
         method: 'get'
     })
 }
+
+// -----------------------登陆注册逻辑，借用git上的elm的接口实现，顺便用下fetch-----------------------
+/**
+ * 获取图片验证码
+ */
+
+export const getcaptchas = () => fetch('/v1/captchas', {},'POST');
+
+
+/**
+ * 检测帐号是否存在
+ */
+
+export const checkExsis = (checkNumber, type) => fetch('/v1/users/exists', {
+	[type]: checkNumber,
+	type
+});
+
+
+/**
+ * 账号密码登录
+ */
+export const accountLogin = (username, password, captcha_code) => fetch('/v2/login', {username, password, captcha_code}, 'POST');
+
+
+/**
+ * 退出登录
+ */
+export const signout = () => fetch('/v2/signout');
+
+
+/**
+ * 改密码
+ */
+export const changePassword = (username, oldpassWord, newpassword, confirmpassword, captcha_code) => fetch('/v2/changepassword', {username, oldpassWord, newpassword, confirmpassword, captcha_code}, 'POST');

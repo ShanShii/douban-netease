@@ -7,12 +7,13 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    { path: '*', redirect: '/' },
     {
       path: '/',
       name: 'entrance',
       component: () => import('@/views/Entrance.vue')
     },
-
+    
     {
       path: '/douban',
       name: 'douban',
@@ -22,6 +23,7 @@ export default new Router({
         keepAlive: true
       },
       children: [
+        // 主页
         {
           path: 'main',
           name: 'main',
@@ -30,6 +32,7 @@ export default new Router({
             keepAlive: true
           },
         },
+        // 推荐
         {
           path: 'recommend',
           name: 'recommend',
@@ -38,14 +41,26 @@ export default new Router({
             keepAlive: true
           },
         },
+        // 个人主页
         {
           path: 'mine',
           name: 'mine',
-          component: () => import('@/views/db-mine.vue'),
+          component: () => import('@/views/db-profile'),
           meta: {
             keepAlive: true
           },
+          children: [
+            {
+              path: 'login',
+              name: 'login',
+              component: () => import('@/views/db-profile/children/login.vue'),
+              meta: {
+                keepAlive: false
+              },
+            }
+          ]
         },
+        // 电影详情页
         {
           path: 'movie',
           name: 'movie',
@@ -55,6 +70,7 @@ export default new Router({
             keepAlive: false
           },
         },
+        // 影人
         {
           path: 'celebrity',
           name: 'celebrity',

@@ -13,13 +13,14 @@
 
 <script>
 import tabbar from '../components/douban-tabbar'
-
+import fetch from '../api/fetch'
 export default {
     components: {
         tabbar
     },
     data () {
         return {
+            url: null
         }
     },
     computed: {
@@ -32,8 +33,13 @@ export default {
             }
             return route[this.$route.name];
         }
-    }
-    
+    },
+    mounted() {
+         console.log(fetch('/v1/captchas', {},'POST').then(res => {
+             console.log(res)
+             this.url = res.code;
+         }))
+    },
 }
 
 </script>

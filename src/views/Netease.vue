@@ -1,7 +1,7 @@
 <!-- netease主承载页 -->
 <template>
     <div id="netease-main">
-        NetEase
+        NetEase不写了
     </div>
 </template>
 

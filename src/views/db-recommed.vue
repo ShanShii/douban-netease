@@ -14,9 +14,11 @@
                         <div class="movie" :key="item.id" @click="entryMovieDetail(item.id)">
                             <img :src="item.images.small" alt="movie poster">
                             <p class="title">{{ item.title }}</p>
+
+                            <!-- rating评分 -->
                             <template v-if="item.rating.average > 0">
                                 <van-rate class="rating-stars" v-model="stars.new[index]" :size="12" allow-half readonly/>
-                                <span class="rating-num">{{ item.rating.average }}</span>
+                                <span class="rating-num">{{ item.rating.average.toFixed(1) }}</span>
                             </template>
                             <span class="rating-num" v-else>暂无评分</span>
                         </div>
@@ -39,13 +41,15 @@
                             <!-- 电影榜单排名1-4 -->
                             <div class="billboard-bd" v-for="index in 4" :key="index">
                                 <!-- 电影描述主体 -->
-                                <van-cell  @click="entryMovieDetail(movies[name][index].id)">
+                                <van-cell  @click="entryMovieDetail(movies[name][index-1].id)">
                                     <div class="movie-item">
                                         <span class="order">{{ index }}</span>
                                         <img :src="movies[name][index-1].images.small" alt="Movie Image">
+
+                                        <!-- 电影信息描述 -->
                                         <div class="caption">
                                             <p class="title">{{ movies[name][index-1].title }}</p>
-                                        <!-- 评分&观看人数 -->
+                                            <!-- 评分&观看人数 -->
                                             <div class="rate">
                                                 <template v-if="stars[name][index-1] > 0">
                                                     <!-- stars: this.item.rating.stars*0.1 -->
@@ -58,11 +62,14 @@
                                             </div>
                                             <div v-if="movies[name][index-1].collect_count" class="has-watched">{{ movies[name][index-1].collect_count }}人看过</div>
                                         </div>
+
                                         <!-- 排名上升/下降趋势 -->
                                         <i v-if="name === 'usBox' || name === 'weekly'" class="iconfont" :class="iconClass(delta[name][index-1])"></i>
                                     </div>
                                 </van-cell>
                             </div>
+
+                            <!-- view-more -->
                             <div class="view-more" @click="toggleBillboard(name)">查看所有{{ name==='top250'?250:movies[name].length }}部</div>
                         </div>
                     </swiper-slide>
@@ -313,58 +320,59 @@ export default {
         }
     }
 
-    .billboard-title {
-        padding: 0 10px; 
-        height: 30px;
-        line-height: 30px;
-        font-size: 16px;
-        font-weight: bold;
-    }
-    .billboard-box {
-        border-radius: 30px;
-        border: 1px solid gray;
-        overflow: hidden;
-        margin: 10px;
-    }
-    .billboard-head {
-        height: 120px;
-        position: relative;
-        .title {
-            position: absolute;
-            top: 15px;
-            left: 15px;
+    .billboard {
+        &-title {
+            padding: 0 10px; 
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
             font-weight: bold;
         }
-    }
+        &-head {
+            height: 120px;
+            position: relative;
+            .title {
+                position: absolute;
+                top: 15px;
+                left: 15px;
+                font-weight: bold;
+            }
+        }
+        &-box {
+            border-radius: 30px;
+            border: 1px solid gray;
+            overflow: hidden;
+            margin: 10px;
+        }
 
-    @mixin head-image($imageUrl, $posX, $posY) {
-        background: url($imageUrl) $posX $posY;
-        background-size: cover;
-    }
-    .head-image1 {
-        @include head-image (
-            $imageUrl: "../assets/bimage1.jpg",
-            $posX: 15%,
-            $posY: 19%
-        );
-        color: #fff;
+        @mixin head-image($imageUrl, $posX, $posY) {
+            background: url($imageUrl) $posX $posY;
+            background-size: cover;
+        }
+        .head-image1 {
+            @include head-image (
+                $imageUrl: "../assets/bimage1.jpg",
+                $posX: 15%,
+                $posY: 19%
+            );
+            color: #fff;
 
-    }
-    .head-image2 {
-        @include head-image (
-            $imageUrl: "../assets/bimage2.jpg",
-            $posX: 15%,
-            $posY: 64%
-        );
-    }
-    .head-image3 {
-        @include head-image (
-            $imageUrl: "../assets/bimage3.jpg",
-            $posX: 15%,
-            $posY: 52%
-        );
-        color: #fff;
-
+        }
+        .head-image2 {
+            @include head-image (
+                $imageUrl: "../assets/bimage2.jpg",
+                $posX: 15%,
+                $posY: 64%
+            );
+        }
+        .head-image3 {
+            @include head-image (
+                $imageUrl: "../assets/bimage3.jpg",
+                $posX: 15%,
+                $posY: 52%
+            );
+            color: #fff;
+        }
     }
     /deep/ .van-cell {
         // 清除默认格式

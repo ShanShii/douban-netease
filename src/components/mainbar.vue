@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import BMapLoader from '../api/location.js'
+import { BMapLoader }from '../api/mUtils'
 import Citylist from '@/views/Citylist'
 import {
     mapMutations
@@ -41,7 +41,7 @@ export default {
         // 获得定位地址
         getLocation() {
             ///手机可以，电脑不可以，(浏览器定位)我傻了...
-            BMapLoader.init().then(BMap => {
+            BMapLoader().then(BMap => {
                 var map = new BMap.Map("allmap");
                 var point = new BMap.Point(116.331398,39.897445);
                 map.centerAndZoom(point,12);
