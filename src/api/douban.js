@@ -1,7 +1,7 @@
 // 豆瓣 api
 import { dbservice as request } from './request';
 import fetch from './fetch'
-import { cityList } from './mUtils'
+import { cityList, getStore } from './mUtils'
 
 // dbapi代理：https://api.douban.com/v2
 request.defaults.baseURL = '/dbapi';
@@ -91,14 +91,10 @@ export const getcaptchas = () => fetch('/v1/captchas', {},'POST');
 
 
 /**
- * 检测帐号是否存在
+ * 获取用户信息
  */
 
-export const checkExsis = (checkNumber, type) => fetch('/v1/users/exists', {
-	[type]: checkNumber,
-	type
-});
-
+export const getUser = () => fetch('/v1/user', {user_id: getStore('user_id')});
 
 /**
  * 账号密码登录

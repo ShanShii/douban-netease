@@ -50,13 +50,17 @@ export default new Router({
             keepAlive: true
           },
           children: [
+            // 登陆
             {
               path: 'login',
               name: 'login',
-              component: () => import('@/views/db-profile/children/login.vue'),
-              meta: {
-                keepAlive: false
-              },
+              component: () => import('@/views/db-profile/children/login.vue')
+            },
+            // 登陆后的主页
+            {
+              path: 'logout',
+              name: 'logout',
+              component: () => import('@/views/db-profile/children/logout.vue')
             }
           ]
         },
