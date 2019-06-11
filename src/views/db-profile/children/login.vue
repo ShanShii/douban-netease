@@ -1,5 +1,6 @@
 <!-- login -->
 <template>
+    <!-- login和logout好像可以抽象一下，用slot? -->
     <div class="login">
         <van-nav-bar fixed left-arrow @click-left="$router.go(-1)" class="login-nav"></van-nav-bar>
         <div class="wrapper">

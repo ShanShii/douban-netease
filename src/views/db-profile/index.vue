@@ -9,8 +9,18 @@
         </header>
         <main class="profile-body">
             <van-tabs v-model="active" sticky color="gray" animated swipeable>
-                <van-tab v-for="name in tabs" :title="name" :key="name">
-                    {{name}}
+                <van-tab v-for="(name, index) in tabs" :title="tabsTitle[index]" :key="name">
+                    <!-- {{ name }} -->
+                    <template v-for="item in [wanted, watched, celebrities][index]">
+                        <movie-cell :key="item.id" :item="item" :rate="index?false:true" v-if="index !== 2">
+                            <template v-slot:my-rate v-if="index === 1">
+                                <div class="rate">
+                                    <van-rate :size="14" v-model="item.rate_value" readonly/>
+                                    <van-icon class="icon" name="edit"/>
+                                </div>
+                            </template>
+                        </movie-cell>
+                    </template>
                 </van-tab>
             </van-tabs>
         </main>
@@ -23,23 +33,34 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import movieCell from '../../components/movie-cell'
+
 export default {
+    components: {
+        movieCell
+    },
     data () {
         return {
             active: 0,
-
-
-            tabs: [
+            tabsTitle: [
                 '想看',
                 '看过',
                 '影人'
+            ],
+            tabs: [
+                'watched',
+                'wanted',
+                'celebrities'
             ]
         };
     },
     computed: {
         ...mapState([
             'isLogin',
-            'userInfo'
+            'userInfo',
+            'watched',
+            'wanted',
+            'celebrities'
         ])
     },
     methods: {
@@ -82,6 +103,25 @@ export default {
                 color: #fff;
 
             }
+        }
+    }
+
+    &-body {
+        /* 修改movie-cell中的image大小 */
+        /deep/ .movie-item .movie-image {
+            height: 110px;
+            width: 75px;
+        }
+        .rate {
+            margin-top: 5px;
+            height: 35px;
+            border-left: 3px solid gray;
+            background-color: rgba(172, 172, 172, 0.475);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px 0 5px;
         }
     }
 }

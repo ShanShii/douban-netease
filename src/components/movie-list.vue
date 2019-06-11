@@ -3,7 +3,7 @@
     <div class="movie-list" :class="{ 'coming-soon-movie-list': movieListType}">
         <!-- comingSoon中的按月排序，四个button（all, 5, 6, 7 | 时间，热度），有点像之前写过的购物车 -->
         <div class="filter-sort-items" v-if="movieListType === 'comingSoon'">
-            <!-- 事件委托用上了要 -->
+            <!-- 事件委托 -->
             <ul class="filters-left" @click="onClick($event, 'filter')">
                 <li class="filter" data-filter="'all'" :class="{active: active.filter==='all'}">全部</li>
                 <!-- v-show加强体验,注入data-filter和下面的data-sort方便事件委托 -->
@@ -28,6 +28,7 @@
                                                 Array:
                                                     [{}, {}, ...]
                                           )
+                                        ...这谁看得懂啊q q
          -->
         <div class="movie-wrapper"  :class="{ 'coming-soon-wrapper': movieListType}"
           v-for="(item, index) in (movieListType? filterAndSortMovies:movies)" :key="index">
@@ -151,12 +152,12 @@ export default {
         }
     },
     methods: {
-        // 筛选功能，待完成
+        // 筛选功能
         onClick(event, type) {
             let tar = event.target
             if(tar.nodeName.toLowerCase() === 'li') {
                 let active = tar.dataset[type]
-                console.log(active, typeof active)
+                // console.log(active, typeof active)
                 this.active[type] = active
             }
         }
@@ -229,42 +230,6 @@ export default {
         line-height: 25px;
         color: gray;
         background-color: #ebedf0;
-    }
-    
-    .movie-item {
-        display: flex;
-        img {
-            height: 150px;
-            width: 110px;
-            flex: none;
-        }
-
-        .caption {
-            flex: auto;
-            width: calc(100% - 100px - 10px);
-            margin-left: 10px;
-            .title {
-                font-size: 16px;
-                line-height: 0;
-                font-weight: bold;
-            }
-            .rate {
-                display: flex;
-                margin-bottom: 5px;
-                line-height: 3.4vw; // 这里不改半星位置会偏移...vant的问题
-                span {
-                    font-size: 11px;
-                    line-height: 14px;
-                    margin-left: 5px;
-                }
-            }
-
-            .info {
-                color: gray;
-                font-size: 13px;
-                line-height: 1.6em;
-            }
-        }
     }
 }
 </style>

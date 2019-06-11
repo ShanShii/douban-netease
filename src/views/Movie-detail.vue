@@ -44,12 +44,39 @@
             </section>
 
             <!-- 想看/看过 -->
-            <div class="selection">
-                <van-button class="want" plain type="warning">想看</van-button>
-                <van-button class="watched" plain type="warning">
+            <div class="watched-selected" v-if="isWatched"
+              @click="dialogShow=true">
+                <div class="wrapper">
+                    <img class="avatar" src="../assets/timg.gif" alt="avatar">
+                    <span class="info">我看过:</span>
+                    <van-rate :size="14" v-model="rateValue" readonly/>
+                    <span class="time">{{ time }}</span>
+                </div>
+                <van-icon class="icon" name="edit"/>
+            </div>
+            <div class="selection" v-else>
+                <van-button class="want" plain :type="isWanted?'default':'warning'"
+                    @click="addWanted">
+                    {{ isWanted?'已想看':'想看' }}</van-button>
+                <van-button class="watched" plain type="warning"
+                    @click="addWatched">
                     看过 <span font-size="16px">☆ ☆ ☆ ☆ ☆</span>
                 </van-button>
             </div>
+
+            <!-- 评分dialog -->
+            <van-dialog
+                v-model="dialogShow"
+                title="看过"
+                show-cancel-button
+                @confirm="onConfirm"
+                :before-close="close"
+            >
+                <div class="dialog-wrapper">
+                    <div class="title">{{ rateLevel[rateValue] }}</div>
+                    <van-rate v-model="rateValue"/>
+                </div>
+            </van-dialog>
 
             <!-- 简介 -->
             <section class="movie-summary">
@@ -90,6 +117,7 @@ import analyze from 'rgbaster'
 import comments from '@/components/detail-comments'
 import navbar from '@/components/navbar'
 import loading from '@/components/loading'
+import { mapState, mapMutations } from 'vuex';
 export default {
     props: [
         'movieId'    // 路由组件query传参
@@ -102,6 +130,12 @@ export default {
     data () {
         return {
             failImg: require('@/assets/timg.gif'),  // 电影人头像加载失败的fallback
+            dialogShow: false,
+            rateLevel: ['点击星星评分', '很差', '较差', '还行', '推荐', '力荐'],
+            rateValue: 0,
+            listIndex: -1,
+            time: null,     // x月xx日
+
             movie: null,    // 电影数据
             loaded: false,  // 加载状态
             stars: 0,       // 评分值
@@ -111,7 +145,32 @@ export default {
             color: null     // 分析出的背景色,形式应该为[{},{}...]
         };
     },
+    computed: {
+        ...mapState([
+            'wanted',
+            'watched'
+        ]),
+        isWanted() {
+            let res = this.findRateValueAndIndex('wanted')
+            if(res) {
+                this.setRateValueAndIndex(res.rate_value, res.index);
+                return true;
+            }
+            return false;
+        },
+        isWatched() {
+            let res = this.findRateValueAndIndex('watched')
+            if(res) {
+                this.setRateValueAndIndex(res.rate_value, res.index);
+                return true;
+            }
+            return false;
+        }
+    },
     methods: {
+        ...mapMutations([
+            'addList'
+        ]),
         onScroll(e) {
             this.sclTop = e.target.scrollTop
             this.top = this.$refs.main.offsetTop
@@ -125,6 +184,80 @@ export default {
                 celebrity_id: id
             }})
         },
+
+        /**
+         * 复用率有点高，抽出来
+         * function: 在wanted||watched里寻找rate_value & index
+         * 如果存在return {value, index}对象，不存在return null
+         * 如果在wanted里面找, rate_value恒为0无所谓
+         */
+        findRateValueAndIndex(name) {
+            let rate_value = 0;
+            for(let index=0; index < this[name].length; index++) {
+                if(this[name][index].id === this.movie.id) {
+                    if(name === 'watched') rate_value = this[name][index].rate_value;
+                    return {rate_value, index};
+                }
+            }
+            return null;
+        },
+        /**
+         * 已评过分则拿过来
+         * 顺便在这里拿下在vuex中的index，再次评分的时候修改vuex里的rate_value就好了
+         */
+        setRateValueAndIndex(value, index) {
+            this.rateValue = value;
+            this.listIndex = index;
+        },
+        
+        /**
+         * dialog before-colose执行函数
+         * 评分为0时 done(false)阻止关闭dialog
+         */
+        close(action, done) {
+            if(action === 'confirm' && !this.rateValue) {
+                done(false);
+            } else {
+                done();
+            }
+        },
+        
+        /**
+         * 评分确认
+         * function: 没有评分(value=0)：toast 至少打一星
+         *          已评分：只修改watched里的值
+         *          首次评分：增加rate_value并add movie
+         */
+        onConfirm() {
+            if(! this.rateValue) this.$toast('至少打一星哦~');
+            else {
+                if(this.isWatched)  {
+                    this.watched[this.listIndex].rate_value = this.rateValue;
+                } else {
+                    let watchedMovie = Object.assign({}, this.movie, { rate_value: this.rateValue })
+                    // console.log(watchedMovie)
+                    this.addList({ name: 'watched', obj: watchedMovie })
+                    this.dialogShow = false
+                }
+            }
+        },
+        onCancel() {
+            this.rateValue = 0;
+            this.dialogShow = false;
+        },
+        addWatched() {
+            this.dialogShow = true;
+        },
+        addWanted() {
+            if(this.isWanted) {
+                let res = this.findRateValueAndIndex('wanted');
+                this.wanted.splice(res.index, 1);
+            }
+            else {
+                this.addList({ name: 'wanted', obj: this.movie })
+            }
+        },
+
         async getMovie() {
             this.movie = await getMovieDetail(this.movieId)
             // 分析图片主色设置背景色
@@ -166,6 +299,9 @@ export default {
     },
     mounted() {
         this.getMovie();
+        // 无存储mock评分时间
+        let date = new Date();
+        this.time = date.getMonth()+1 + '月' + date.getDate() + '日';
     }
 }
 
@@ -202,6 +338,7 @@ export default {
         }
     }
     .movie {
+        /* 电影描述 */
         &-desc {
             @include inner-padding();
             display: flex;
@@ -247,6 +384,43 @@ export default {
             }
         }
 
+        /* rated显示框 */
+        .watched-selected {
+            height: 50px;
+            background-color: rgb(252, 240, 172);
+            margin: 0 15px;
+            padding: 0 10px;
+            overflow: hidden;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .wrapper {
+                display: flex;
+                align-items: center;
+            }
+            .avatar {
+                height: 35px;
+                width: 35px;
+                border-radius: 100%;
+            }
+            .info {
+                font-size: 14px;
+                font-weight: 700;
+                margin: 0 5px;
+            }
+            .van-rate__item {
+                padding: 0 1px;
+            }
+            .time {
+                margin-left: 5px;
+                font-size: 12px;
+                color: gray;
+            }
+            .icon {
+                font-size: 20px;
+            }
+        }
         /* 想看/看过 */
         .selection {
             padding: 0 15px;
@@ -262,6 +436,18 @@ export default {
             }
             .watched {
                 flex: auto;
+            }
+        }
+        .dialog-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            margin-top: 20px;
+            .title {
+                font-size: 0.8em;
+                color: gray;
             }
         }
 

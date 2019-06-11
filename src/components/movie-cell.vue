@@ -3,10 +3,10 @@
     <van-cell @click="onClick">
         <!-- 电影描述主体 -->
         <div class="movie-item">
-            <img :src="item.images.small" alt="Movie Image">
+            <img class="movie-image" :src="item.images.small" alt="Movie Image">
             <div class="caption">
                 <p class="title">{{ item.title }}</p>
-                <div class="rate">
+                <div class="rate" v-if="rate">
                     <template v-if="stars > 0">
                         <van-rate v-model="stars" :size="12" allow-half readonly/>
                         <span>{{ item.rating.average.toFixed(1) }}</span>
@@ -39,7 +39,11 @@
                         </template>
                     </span>
                 </div>
-                <div v-if="item.collect_count && !type" class="has-watched">{{ item.collect_count }}人看过</div>
+                <div v-if="item.collect_count && !type && rate" class="has-watched">
+                    {{ item.collect_count }}人看过
+                </div>
+
+                <slot name="my-rate"></slot>
             </div>
         </div>
     </van-cell>
@@ -53,7 +57,11 @@ export default {
         type: {
             type: String,
             default: ''
-        }
+        },
+        rate: {     // rate控制普通cell中评分的正常显示，rate=false说明在profile中使用，不需要rate/xxx人看过
+            type: Boolean,
+            default: true
+        },
     }, // item : movie-data
     data () {
         return {
@@ -83,5 +91,40 @@ export default {
         -webkit-transform: scaleY(0.7);
         transform: scaleY(0.7);
         border-bottom: 1px solid #ebedf0;
+    }
+    .movie-item {
+        display: flex;
+        .movie-image {
+            height: 150px;
+            width: 110px;
+            flex: none;
+        }
+
+        .caption {
+            flex: auto;
+            width: calc(100% - 100px - 10px);
+            margin-left: 10px;
+            .title {
+                font-size: 16px;
+                line-height: 0;
+                font-weight: bold;
+            }
+            .rate {
+                display: flex;
+                margin-bottom: 5px;
+                line-height: 3.4vw; // 这里不改半星位置会偏移...vant的问题
+                span {
+                    font-size: 11px;
+                    line-height: 14px;
+                    margin-left: 5px;
+                }
+            }
+
+            .info {
+                color: gray;
+                font-size: 13px;
+                line-height: 1.6em;
+            }
+        }
     }
 </style>

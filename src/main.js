@@ -6,9 +6,9 @@ import Vant from 'vant';
 import 'vant/lib/index.css';
 import './assets/fonts/iconfont.css';
 import './assets/css/normalize.css';
-import { Dialog } from 'vant';
+import { Dialog, Toast } from 'vant';
 
-Vue.use(Dialog);
+Vue.use(Dialog, Toast);
 
 Vue.use(Vant);
 Vue.config.productionTip = false

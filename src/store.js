@@ -14,7 +14,10 @@ export default new Vuex.Store({
     state: {
         location: '',
         isLogin: false,
-        userInfo: null
+        userInfo: null,
+        wanted: [],
+        watched: [],
+        celebrities: []
     },
     // localStorage中有userid就保存登陆状态
     mutations: {
@@ -41,7 +44,29 @@ export default new Vuex.Store({
         logout(state) {
             state.isLogin = false;
             state.userInfo = null;
+            let list = ['wanted', 'watched', 'celebrities']
+            list.forEach(item => state[item] = [])
             removeStore('user_id');
+        },
+
+        addList(state, { name, obj }) {
+            // console.log(state, name, obj)
+            if(name === 'wanted') {
+                for(let i=0; i < state.watched.length; i++) {
+                    if(state.watched[i].id === obj.id) {
+                        state.watched.splice(i, 1);
+                        break;
+                    }
+                }
+            } else {
+                for(let i=0; i < state.wanted.length; i++) {
+                    if(state.wanted[i].id === obj.id) {
+                        state.wanted.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            state[name].push(obj);
         }
     },
     actions: {
