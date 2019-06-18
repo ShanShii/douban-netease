@@ -1,11 +1,13 @@
-# douban-netease
+# douban-movie
+    Vue2.0仿手机端豆瓣电影
+    线上demo地址(请用手机或者浏览及手机模式下访问)：[豆瓣电影](http://5c29634q4.qicp.vip:53829).  (如果我电脑开着的话...)
 
 ## Project setup
 ```
 npm install
 ```
 + insert:
-    - 在https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi中下载NeteaseCloudMusicApi，并按照教程启动本地代理。
+    - ~~在https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi中下载NeteaseCloudMusicApi，并按照教程启动本地代理~~ 不写了
     - 使用node proxy.js，启动豆瓣API本地代理（默认8010端口）。
     
 ### Compiles and hot-reloads for development
@@ -32,21 +34,91 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 技术栈：vue, vue-router, vue-vuex, vue-CLI, vant, swiper, {axios, fetch, ajax}, sass, node proxy, postcss-px-to-vw
+```
+src
+│  App.vue
+│  main.js
+│  router.js
+│  store.js
+│
+├─api
+│      douban.js
+│      env.js
+│      fetch.js
+│      mUtils.js
+│      request.js
+│
+├─assets
+│  │  ball-triangle.svg
+│  │  bimage1.jpg
+│  │  bimage2.jpg
+│  │  bimage3.jpg
+│  │  douban-logo.png
+│  │  logo.png
+│  │  netease-logo.gif
+│  │  profile-bg.jpg
+│  │  timg.gif
+│  │
+│  └─fonts
+│          iconfont.css
+│          iconfont.eot
+│          iconfont.js
+│          iconfont.svg
+│          iconfont.ttf
+│          iconfont.woff
+│          iconfont.woff2
+│
+├─common
+│  └─css
+│          normalize.css
+│          swiper.css
+│
+├─components
+│      detail-comments.vue
+│      douban-tabbar.vue
+│      loading.vue
+│      mainbar.vue
+│      movie-cell.vue
+│      movie-list.vue
+│      navbar.vue
+│
+└─views
+    │  Celebrity.vue
+    │  Citylist.vue
+    │  Douban.vue
+    │  Entrance.vue
+    │  Main.vue
+    │  movie-detail.vue
+    │  Netease.vue
+    │
+    ├─Profile
+    │  │  index.vue
+    │  │
+    │  └─children
+    │          login.vue
+    │          logout.vue
+    │
+    └─Recommend
+        │  index.vue
+        │
+        └─components
+                skeleton.vue
+```
+
 /* 
 TODO:
     即将上映页的bug     solved
-    推荐页的骨架屏
+    推荐页的骨架屏     finished
     profile的折叠头
     理解懒加载，节流，防抖等的原理，使用vue-lazyload
 
     webpack & vue.config.js 配置开发
-    配置开发和发布api路径
+    配置开发和发布api路径    finished
 
     说明
-    解决接口问题，上线部署
+    解决接口问题，上线部署     finished
 
     403 catch
-    图片懒加载，loading 加载状态
     个人页      finished
     推荐页（轮播窗还原）    finishied
     登陆    finished
