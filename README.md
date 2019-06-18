@@ -33,7 +33,7 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-###动图展示
+### 动图展示
 ***
 __首页__
 ![首页](https://github.com/ShanShii/douban-movie/raw/master/gif/1.gif)
