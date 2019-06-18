@@ -5,7 +5,7 @@
 npm install
 ```
 + insert:
-    - ~~在https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi中下载NeteaseCloudMusicApi，并按照教程启动本地代理。~~不写了
+    - ~~在https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi中下载NeteaseCloudMusicApi，并按照教程启动本地代理~~不写了
     - 使用node proxy.js，启动豆瓣API本地代理（默认8010端口）。
     
 ### Compiles and hot-reloads for development
