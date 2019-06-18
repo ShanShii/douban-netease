@@ -5,7 +5,7 @@
 npm install
 ```
 + insert:
-    - ~~在https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi中下载NeteaseCloudMusicApi，并按照教程启动本地代理~~不写了
+    - ~~在https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi中下载NeteaseCloudMusicApi，并按照教程启动本地代理~~ 不写了
     - 使用node proxy.js，启动豆瓣API本地代理（默认8010端口）。
     
 ### Compiles and hot-reloads for development
@@ -32,6 +32,76 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 技术栈：vue, vue-router, vue-vuex, vue-CLI, vant, swiper, {axios, fetch, ajax}, sass, node proxy, postcss-px-to-vw
+```
+src
+│  App.vue
+│  main.js
+│  router.js
+│  store.js
+│
+├─api
+│      douban.js
+│      env.js
+│      fetch.js
+│      mUtils.js
+│      request.js
+│
+├─assets
+│  │  ball-triangle.svg
+│  │  bimage1.jpg
+│  │  bimage2.jpg
+│  │  bimage3.jpg
+│  │  douban-logo.png
+│  │  logo.png
+│  │  netease-logo.gif
+│  │  profile-bg.jpg
+│  │  timg.gif
+│  │
+│  └─fonts
+│          iconfont.css
+│          iconfont.eot
+│          iconfont.js
+│          iconfont.svg
+│          iconfont.ttf
+│          iconfont.woff
+│          iconfont.woff2
+│
+├─common
+│  └─css
+│          normalize.css
+│          swiper.css
+│
+├─components
+│      detail-comments.vue
+│      douban-tabbar.vue
+│      loading.vue
+│      mainbar.vue
+│      movie-cell.vue
+│      movie-list.vue
+│      navbar.vue
+│
+└─views
+    │  Celebrity.vue
+    │  Citylist.vue
+    │  Douban.vue
+    │  Entrance.vue
+    │  Main.vue
+    │  movie-detail.vue
+    │  Netease.vue
+    │
+    ├─Profile
+    │  │  index.vue
+    │  │
+    │  └─children
+    │          login.vue
+    │          logout.vue
+    │
+    └─Recommend
+        │  index.vue
+        │
+        └─components
+                skeleton.vue
+```
 /* 
 TODO:
     即将上映页的bug     solved
