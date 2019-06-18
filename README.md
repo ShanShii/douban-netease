@@ -1,4 +1,5 @@
-# douban-netease
+# douban-movie
+    Vue2.0仿手机端豆瓣电影
 
 ## Project setup
 ```
