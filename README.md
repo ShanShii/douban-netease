@@ -5,7 +5,7 @@
 npm install
 ```
 + insert:
-    - 在https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi中下载NeteaseCloudMusicApi，并按照教程启动本地代理。
+    - ~~在https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi中下载NeteaseCloudMusicApi，并按照教程启动本地代理。~~不写了
     - 使用node proxy.js，启动豆瓣API本地代理（默认8010端口）。
     
 ### Compiles and hot-reloads for development
@@ -35,18 +35,17 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 /* 
 TODO:
     即将上映页的bug     solved
-    推荐页的骨架屏
+    推荐页的骨架屏     finished
     profile的折叠头
     理解懒加载，节流，防抖等的原理，使用vue-lazyload
 
     webpack & vue.config.js 配置开发
-    配置开发和发布api路径
+    配置开发和发布api路径    finished
 
     说明
-    解决接口问题，上线部署
+    解决接口问题，上线部署     finished
 
     403 catch
-    图片懒加载，loading 加载状态
     个人页      finished
     推荐页（轮播窗还原）    finishied
     登陆    finished
