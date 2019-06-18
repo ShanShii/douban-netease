@@ -1,5 +1,6 @@
 # douban-movie
     Vue2.0仿手机端豆瓣电影
+    线上demo地址(请用手机或者浏览及手机模式下访问)：http://5c29634q4.qicp.vip:53829  (如果我电脑开着的话...)
 
 ## Project setup
 ```
@@ -103,6 +104,7 @@ src
         └─components
                 skeleton.vue
 ```
+
 /* 
 TODO:
     即将上映页的bug     solved
