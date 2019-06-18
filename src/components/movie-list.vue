@@ -5,7 +5,7 @@
         <div class="filter-sort-items" v-if="movieListType === 'comingSoon'">
             <!-- 事件委托 -->
             <ul class="filters-left" @click="onClick($event, 'filter')">
-                <li class="filter" data-filter="'all'" :class="{active: active.filter==='all'}">全部</li>
+                <li class="filter" data-filter="all" :class="{active: active.filter==='all'}">全部</li>
                 <!-- v-show加强体验,注入data-filter和下面的data-sort方便事件委托 -->
                 <li class="filter" data-filter="1" v-show="month" :class="{active: active.filter==='1'}">{{ month }}月</li>
                 <li class="filter" data-filter="2" v-show="month" :class="{active: active.filter==='2'}">{{ (month+1)%13==0?1:(month+1)%13 }}月</li>
@@ -116,7 +116,7 @@ export default {
                 ,filterData = data  // 临时存储变量，下同
                 ,sortData = []
                 
-            console.log(typeof data)
+            // console.log(typeof data)
             // 神奇，object竟然能用filter！改完又不能了，但是控制台里能用，不知道为啥devtools里显示是Array
             if(filter !== 'all') {
                 filterData = {}

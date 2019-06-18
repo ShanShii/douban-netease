@@ -2,9 +2,10 @@
 import { dbservice as request } from './request';
 import fetch from './fetch'
 import { cityList, getStore } from './mUtils'
+import baseUrl from './env'
 
 // dbapi代理：https://api.douban.com/v2
-request.defaults.baseURL = '/dbapi';
+request.defaults.baseURL = baseUrl;
 // 电影相关api: https://api.douban.com/v2/movie/xxx?apikey=
 const movie = '/movie';
 

@@ -2,7 +2,7 @@
 <template>
     <div class="db-recommend">
         <van-search class="search" placeholder="请输入搜索关键词" v-model="searchValue" />
-        <main class="recommend-wrapper">
+        <main v-if="loaded">
             <!-- 新片榜，两行的gird 一行6个，共12个，不够点击查看全部 -->
             <div class="new">
                 <div class="new-title">
@@ -29,18 +29,19 @@
             <!-- 口碑/北美/top250 slider -->
             <div class="billboard">
                 <div class="billboard-title">豆瓣榜单</div>
-                <!-- swiper组件 -->
+                    <!-- swiper组件 -->
                 <swiper :options="swiperOption">
                     <!-- :style="{background: `url(${movies[name][0].images.medium})`}" -->
                     <swiper-slide v-for="(name, i) in boardNames" :key="name">
                         <!-- :style="{background: `url(${movies[name][0].images.medium}) cover`}"效果不好，弃用 -->
-                        <div class="billboard-box" v-if="loaded">
+                        <div class="billboard-box">
                             <div class="billboard-head" :class="setHeadImage(i)">
                                 <span class="title">{{ boardTitles[i] }}</span>
                             </div>
+
                             <!-- 电影榜单排名1-4 -->
                             <div class="billboard-bd" v-for="index in 4" :key="index">
-                                <!-- 电影描述主体 -->
+                                    <!-- 电影描述主体 -->
                                 <van-cell  @click="entryMovieDetail(movies[name][index-1].id)">
                                     <div class="movie-item">
                                         <span class="order">{{ index }}</span>
@@ -49,7 +50,7 @@
                                         <!-- 电影信息描述 -->
                                         <div class="caption">
                                             <p class="title">{{ movies[name][index-1].title }}</p>
-                                            <!-- 评分&观看人数 -->
+                                                <!-- 评分&观看人数 -->
                                             <div class="rate">
                                                 <template v-if="stars[name][index-1] > 0">
                                                     <!-- stars: this.item.rating.stars*0.1 -->
@@ -77,38 +78,41 @@
             </div>
 
 
-    <!-- navbar放popup会产生滑动，暂时不知道为啥 -->
-    <van-nav-bar fixed left-arrow @click-left="toggleBillboard" class="nav"
-        v-if="billboardShow">
-        <span slot="title">
-            <span>{{ boardTitles[boardNames.indexOf(boardName)] }}</span>
-        </span>    
-    </van-nav-bar>
-    <van-popup class="popup" v-model="billboardShow" position="right">
-        <template v-for="name in boardNames">
-            <!-- top250 只渲染boardName榜单-->
-            <van-list :key="name" v-if="name === 'top250' && name === boardName"
-                v-model="top250Loading"
-                :finished="top250finished"
-                finished-text="没有更多了"
-                @load="getTop250Movies"
-                class="popup-list"
-                >
-                <movie-list :data="movies[name]"></movie-list>
-            </van-list>
-            <!-- 口碑/北美/新片榜 固定长度无加载 -->
-            <template  v-else>
-                <movie-list class="popup-list" :key="name" :data="movies[name]" v-if="name === boardName"></movie-list>
-            </template>
-        </template>
-    </van-popup>
-
+            <!-- navbar放popup会产生滑动，暂时不知道为啥 -->
+            <van-nav-bar fixed left-arrow @click-left="toggleBillboard" class="nav"
+                v-if="billboardShow">
+                <span slot="title">
+                    <span>{{ boardTitles[boardNames.indexOf(boardName)] }}</span>
+                </span>    
+            </van-nav-bar>
+            <van-popup class="popup" v-model="billboardShow" position="right">
+                <template v-for="name in boardNames">
+                    <!-- top250 只渲染boardName榜单-->
+                    <van-list :key="name" v-if="name === 'top250' && name === boardName"
+                        v-model="top250Loading"
+                        :finished="top250finished"
+                        finished-text="没有更多了"
+                        @load="getTop250Movies"
+                        class="popup-list"
+                        >
+                        <movie-list :data="movies[name]"></movie-list>
+                    </van-list>
+                    <!-- 口碑/北美/新片榜 固定长度无加载 -->
+                    <template  v-else>
+                        <movie-list class="popup-list" :key="name" :data="movies[name]" v-if="name === boardName"></movie-list>
+                    </template>
+                </template>
+            </van-popup>
         </main>
+
+        <skeleton v-else />
+
     </div>
 </template>
 
 <script>
 import movieList from '@/components/movie-list'
+import skeleton from './components/skeleton'
 import {
     getMovieList,
     getWeeklyList,
@@ -117,11 +121,12 @@ import {
 } from '@/api/douban.js'
 
 import '@/common/css/swiper.css'
-
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+
 export default {
     components:{
         movieList,
+        skeleton,
         swiper,
         swiperSlide
     },
@@ -131,7 +136,7 @@ export default {
 
             swiperOption: {
                 slidesPerView: 'auto',
-                spaceBetween: 20,
+                spaceBetween: 15,
             },
 
             searchValue: '',
@@ -240,18 +245,16 @@ export default {
     width: 100%;
 }
 .db-recommend {
-    
+    margin: 50px 0;
     .search {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         height: 50px;
-        z-index: 1;
+        z-index: 3;
+        background-color: #fff;
         border-bottom: 1px solid #ebedf0;
-    }
-    .recommend-wrapper {
-        margin: 50px 0;
     }
 
     .new {
@@ -351,7 +354,7 @@ export default {
         }
         .head-image1 {
             @include head-image (
-                $imageUrl: "../assets/bimage1.jpg",
+                $imageUrl: "../../assets/bimage1.jpg",
                 $posX: 15%,
                 $posY: 19%
             );
@@ -360,20 +363,21 @@ export default {
         }
         .head-image2 {
             @include head-image (
-                $imageUrl: "../assets/bimage2.jpg",
+                $imageUrl: "../../assets/bimage2.jpg",
                 $posX: 15%,
                 $posY: 64%
             );
         }
         .head-image3 {
             @include head-image (
-                $imageUrl: "../assets/bimage3.jpg",
+                $imageUrl: "../../assets/bimage3.jpg",
                 $posX: 15%,
                 $posY: 52%
             );
             color: #fff;
         }
     }
+
     /deep/ .van-cell {
         // 清除默认格式
         line-height: 1.25em;
@@ -401,15 +405,15 @@ export default {
             flex: auto;
             width: calc(100% - 100px - 10px);
             margin-left: 10px;
+            height: 100%;
             .title {
                 margin: 0;
-                font-size: 16px;
-                font-weight: bold;
+                line-height: inherit;
             }
             .rate {
                 display: flex;
                 margin: 5px 0;
-                line-height: 3.4vw; // 这里不改半星位置会偏移...vant的问题
+                line-height: 3.4vw; // 半星位置会偏移
                 span {
                     font-size: 11px;
                     line-height: 14px;

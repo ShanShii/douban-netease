@@ -5,7 +5,7 @@ import store from './store'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import './assets/fonts/iconfont.css';
-import './assets/css/normalize.css';
+import './common/css/normalize.css';
 import { Dialog, Toast } from 'vant';
 
 Vue.use(Dialog, Toast);

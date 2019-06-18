@@ -1,6 +1,6 @@
 <!-- main -->
 <template>
-    <div class="db-main">
+    <div class="main">
         <mainbar @switchLocation="getCityMovie"></mainbar>
         
         <main class="movie">

@@ -1,16 +1,3 @@
-/* 
-TODO:
-    403 catch
-    图片懒加载，loading 加载状态
-    骨架屏
-    个人页
-    推荐页（轮播窗还原）
-    登陆
-    搜索    *做不了了...api挂了
-    本地存储
-    抽象合并，进一步重构
-    webpack打包
- */
 <!-- 影人页 -->
 <template>
     <div id="celebrity" @scroll="onScroll" v-if="loaded">
@@ -166,7 +153,7 @@ export default {
             this.top = this.$refs.main.offsetTop
         },
         entryMovieDetail(id) {
-            console.log(id)
+            // console.log(id)
             this.$router.push({name: 'movie', query: {
                 'movie_id' : id
             }})
@@ -195,7 +182,7 @@ export default {
 <style lang='scss' scoped>
 /* $title-text-space: 5px;
 $sections-space: 15px;
-用到的地方太少了，每必要 */
+用到的地方太少了，没必要 */
 // .wrapper {
 //     width: 100%;
 //     height: 100vh;
@@ -258,7 +245,7 @@ $sections-space: 15px;
                 color: gray;
             }
             &-text {
-                height: 60px;
+                height: 60PX;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: -webkit-box;

@@ -75,7 +75,7 @@ export default {
             this.popShow = true;
         },
         onClickRight() {
-            console.log(12);
+            // console.log(12);
             // Toast('按钮');
         },
 

@@ -10,7 +10,7 @@
             
         <!-- 海报 -->
         <div class="movie-image" ref="movieImage">
-            <img :src="movie.images.medium" alt="poster" onerror="console.log('111')">
+            <img :src="movie.images.small" alt="poster">
         </div>
         <!-- 电影详情主体 -->
         <main class="movie" ref="main">

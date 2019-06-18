@@ -27,7 +27,7 @@ export default new Router({
         {
           path: 'main',
           name: 'main',
-          component: () => import('@/views/db-main.vue'),
+          component: () => import('@/views/Main.vue'),
           meta: {
             keepAlive: true
           },
@@ -36,7 +36,7 @@ export default new Router({
         {
           path: 'recommend',
           name: 'recommend',
-          component: () => import('@/views/db-recommed.vue'),
+          component: () => import('@/views/Recommend'),
           meta: {
             keepAlive: true
           },
@@ -45,7 +45,7 @@ export default new Router({
         {
           path: 'mine',
           name: 'mine',
-          component: () => import('@/views/db-profile'),
+          component: () => import('@/views/Profile'),
           meta: {
             keepAlive: true
           },
@@ -54,13 +54,13 @@ export default new Router({
             {
               path: 'login',
               name: 'login',
-              component: () => import('@/views/db-profile/children/login.vue')
+              component: () => import('@/views/Profile/children/login.vue')
             },
-            // 登陆后的主页
+            // 退出
             {
               path: 'logout',
               name: 'logout',
-              component: () => import('@/views/db-profile/children/logout.vue')
+              component: () => import('@/views/Profile/children/logout.vue')
             }
           ]
         },
@@ -78,7 +78,7 @@ export default new Router({
         {
           path: 'celebrity',
           name: 'celebrity',
-          component: () => import('@/views/db-celebrity'),
+          component: () => import('@/views/Celebrity'),
           props: (route) => ({ celebrityId: route.query.celebrity_id }),
           meta: {
             keepAlive: false
