@@ -33,6 +33,16 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+###动图展示
+***
+__首页__
+![首页](https://github.com/ShanShii/douban-movie/raw/master/gif/1.gif)
+__骨架屏推荐页__
+![骨架屏推荐页](https://github.com/ShanShii/douban-movie/raw/master/gif/2.gif)
+__个人主页&登陆__
+![个人主页&登陆](https://github.com/ShanShii/douban-movie/raw/master/gif/3.gif)
+__电影/人物详情页&收藏__
+![电影/人物详情页&收藏](https://github.com/ShanShii/douban-movie/raw/master/gif/4.gif)
 技术栈：vue, vue-router, vue-vuex, vue-CLI, vant, swiper, {axios, fetch, ajax}, sass, node proxy, postcss-px-to-vw
 ```
 src
