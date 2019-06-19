@@ -1,6 +1,6 @@
 # douban-movie
     Vue2.0仿手机端豆瓣电影
-    线上demo地址(请用手机或者浏览及手机模式下访问)：[豆瓣电影](http://5c29634q4.qicp.vip:53829).  (如果我电脑开着的话...)
+    线上demo地址(请用手机或者浏览及手机模式下访问)： [豆瓣电影](http://25c29634q4.qicp.vip:53829). http://25c29634q4.qicp.vip:53829 (如果我电脑开着的话...)
 
 ## Project setup
 ```
@@ -43,6 +43,7 @@ __个人主页&登陆__
 ![个人主页&登陆](https://github.com/ShanShii/douban-movie/raw/master/gif/3.gif)
 __电影/人物详情页&收藏__
 ![电影/人物详情页&收藏](https://github.com/ShanShii/douban-movie/raw/master/gif/4.gif)
+
 技术栈：vue, vue-router, vue-vuex, vue-CLI, vant, swiper, {axios, fetch, ajax}, sass, node proxy, postcss-px-to-vw
 ```
 src
